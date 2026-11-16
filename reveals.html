@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hero reveal tests — Shubh Jadiya</title>
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/reveals/reveals.css" />
+  </head>
+  <body>
+    <canvas id="gl" aria-hidden="true"></canvas>
+
+    <header class="top">
+      <a class="mark" href="#">SJ</a>
+      <nav class="nav"><a href="#">Work</a><a href="#">About</a><a href="#">Experience</a><a href="#">Contact</a></nav>
+    </header>
+
+    <h1 class="sr-only">Shubh Jadiya</h1>
+    <div class="intro" id="intro">
+      <p class="role" data-line>Developer &amp; Designer</p>
+      <p class="bio" data-line>Turning interesting ideas into<br />things you can actually use.</p>
+      <a class="cta" href="#" data-line>See my work <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="controls" role="toolbar" aria-label="Reveal tests">
+      <button data-mode="1">1 · Sun → name</button>
+      <button data-mode="3">3 · Backlit</button>
+      <button data-mode="6">6 · Blinds</button>
+      <button data-mode="8">8 · Molten</button>
+      <button id="replay" aria-label="Replay">↻ Replay</button>
+    </div>
+
+    <script type="module" src="/src/reveals/reveals.js"></script>
+  </body>
+</html>

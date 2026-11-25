@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en" class="is-entering">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orbit · Design system · Shubh Jadiya</title>
+    <meta name="theme-color" content="#5b2785" />
+    <link rel="stylesheet" href="/src/ds/tokens.css" />
+    <link rel="stylesheet" href="/src/ds/components.css" />
+    <link rel="stylesheet" href="/src/ds/patterns.css" />
+    <link rel="stylesheet" href="/src/ds/page.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top">
+        <svg class="brand__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(-24 12 12)" stroke-width="1.5"/></svg>
+        Shubh Jadiya <span class="brand__sub">Orbit DS</span>
+      </a>
+      <nav class="site-nav" aria-label="Sections">
+        <a class="link" href="#colour">Foundations</a>
+        <a class="link" href="#components">Components</a>
+        <a class="link" href="#worlds">Worlds</a>
+        <a class="btn btn--paper" href="#patterns"><span class="btn__label">Page patterns</span></a>
+      </nav>
+    </header>
+
+    <!-- ===================================================== HERO -->
+    <section class="ds-hero" id="top">
+      <canvas id="hero-gl" aria-hidden="true"></canvas>
+      <div class="ds-tags" id="hero-tags"></div>
+      <div class="ds-hero__copy">
+        <p class="t-small t-muted ds-kicker">Design system · v0.2</p>
+        <h1 class="t-display">Know the work.<br />Explore the unknown.</h1>
+        <a class="btn" href="#colour">
+          <span class="btn__label">Begin the tour</span>
+          <span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================================================== COLOUR -->
+    <section class="ds-section" id="colour">
+      <header class="ds-head">
+        <p class="ds-num">01</p>
+        <h2 class="t-h1">Colour</h2>
+        <p class="ds-lede">Violet ink, pastel skies, warm paper UI and one loud lime. Every 3D surface uses exactly three tones from its ramp: shade, base and light. Nothing in between.</p>
+      </header>
+      <div class="ds-swatches" id="swatches"></div>
+      <h3 class="t-h3 ds-sub">World skies</h3>
+      <div class="ds-skies">
+        <div class="ds-sky" style="background: var(--sky-space)"><span>Outer space</span><code>--sky-space</code></div>
+        <div class="ds-sky" style="background: var(--sky-water)"><span>Water world</span><code>--sky-water</code></div>
+        <div class="ds-sky" style="background: var(--sky-earth)"><span>Earth world</span><code>--sky-earth</code></div>
+        <div class="ds-sky" style="background: var(--sky-dusk)"><span>Night lake</span><code>--sky-dusk</code></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== TYPE -->
+    <section class="ds-section ds-section--paper" id="type">
+      <header class="ds-head">
+        <p class="ds-num">02</p>
+        <h2 class="t-h1">Type</h2>
+        <p class="ds-lede">One grotesk, tight tracking, mostly weight 500. Display sizes sit on a 0.78 line height so stacked lines lock together. Inter Tight is the free stand-in for Haffer, which you can swap in through <code>--font</code> if you license it.</p>
+      </header>
+      <div class="ds-type">
+        <div class="ds-type__row"><code>display · 96 / 0.78 / 500</code><p class="t-display">Secure the work.</p></div>
+        <div class="ds-type__row"><code>h1 · 64 / 0.92 / 500</code><p class="t-h1">Three worlds, one pilot</p></div>
+        <div class="ds-type__row"><code>h2 · 32 / 0.95 / 500</code><p class="t-h2">Find the data particle</p></div>
+        <div class="ds-type__row"><code>h3 · 22 / 1.1 / 500</code><p class="t-h3">What did I build in this world?</p></div>
+        <div class="ds-type__row"><code>body · 16 / 1.4 / 400</code><p class="t-body">Every project is a place you can land on. Each world has its own terrain, its own sky and its own constellation of work.</p></div>
+        <div class="ds-type__row"><code>ui · 15 / 1 / 500 / −2%</code><p class="t-ui">Begin your mission</p></div>
+        <div class="ds-type__row"><code>micro · 12 / 1.3</code><p class="t-micro">Swipe to explore the worlds</p></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== SHAPE -->
+    <section class="ds-section" id="shape">
+      <header class="ds-head">
+        <p class="ds-num">03</p>
+        <h2 class="t-h1">Shape, line &amp; lift</h2>
+        <p class="ds-lede">Everything is drawn: hairline strokes in ink, dashed lines for paths and orbits. Lifts are hard offsets that read like a cel shadow, never a blur.</p>
+      </header>
+      <div class="ds-shapes">
+        <div class="ds-shape" style="border-radius: var(--r-sm)"><code>r-sm 6</code></div>
+        <div class="ds-shape" style="border-radius: var(--r-md)"><code>r-md 10</code></div>
+        <div class="ds-shape" style="border-radius: var(--r-lg)"><code>r-lg 12</code></div>
+        <div class="ds-shape" style="border-radius: var(--r-xl)"><code>r-xl 18</code></div>
+        <div class="ds-shape" style="border-radius: var(--r-2xl)"><code>r-2xl 30</code></div>
+        <div class="ds-shape" style="border-radius: var(--r-window)"><code>r-window 72</code></div>
+        <div class="ds-shape ds-shape--line"><code>stroke 1 · ink</code></div>
+        <div class="ds-shape ds-shape--dash"><code>dash 4 3</code></div>
+        <div class="ds-shape ds-shape--lift"><code>lift-2</code></div>
+      </div>
+    </section>
+
+    <!-- ===================================================== COMPONENTS -->
+    <section class="ds-section ds-section--sky" id="components">
+      <header class="ds-head">
+        <p class="ds-num">04</p>
+        <h2 class="t-h1">Components</h2>
+        <p class="ds-lede">Paper UI floating in a painted world. Controls are small and calm so the scene does the talking.</p>
+      </header>
+
+      <div class="ds-grid">
+        <figure class="ds-cell">
+          <div class="ds-stage ds-stage--violet ds-stack">
+            <a class="btn" href="#"><span class="btn__label">Begin your mission</span><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+            <div class="ds-row"><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Explore</span></a><a class="btn btn--paper" href="#"><span class="btn__label">Say hello</span></a><a class="link" href="#">Résumé</a></div>
+          </div>
+          <figcaption><b>Buttons.</b> Primary (ink with a paper arrow chip), small, light, paper (header) and text link. On hover the label fills lilac from left to right and the chip tilts with a springy overshoot.</figcaption>
+        </figure>
+
+        <figure class="ds-cell ds-cell--tall">
+          <div class="ds-stage ds-stage--sky ds-oncloud">
+            <article class="card">
+              <div class="card__media"><svg viewBox="0 0 290 160" class="ds-constellation" aria-hidden="true"><path d="M0 160 L0 110 L38 132 L62 160Z M290 160 L290 98 L250 128 L232 160Z" fill="#4a1f6e" stroke="#160923" stroke-width="1"/><g fill="none" stroke="#fff" stroke-opacity=".6" stroke-dasharray="3 3"><path d="M52 0 L78 52 L126 36 L158 130 L222 50"/></g><g fill="#fff"><circle cx="78" cy="52" r="3"/><circle cx="126" cy="36" r="3"/><circle cx="158" cy="130" r="3.5"/><circle cx="222" cy="50" r="3"/><circle cx="190" cy="22" r="1.4"/><circle cx="40" cy="90" r="1.2"/><circle cx="240" cy="110" r="1.2"/></g></svg></div>
+              <h3 class="card__title">What did I build on the night lake?</h3>
+              <p class="card__body">Three projects about seeing data clearly. Open the world to land, look around and find each one.</p>
+              <div class="card__action"><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div>
+            </article>
+            <svg class="cloud" viewBox="0 0 680 70" aria-hidden="true"><path d="M20 60 C10 60 6 52 18 48 C30 44 52 46 70 40 C80 28 110 24 128 32 C140 18 176 14 196 26 C214 16 250 18 262 30 C280 22 312 22 330 34 C356 26 400 28 412 40 C440 34 486 36 500 46 C540 42 600 44 640 50 C668 54 672 62 650 62 Z"/></svg>
+            <div class="stepper" aria-label="Step 1 of 3"><span class="stepper__node" aria-current="step"></span><span class="stepper__rail"></span><span class="stepper__node"></span><span class="stepper__rail"></span><span class="stepper__node"></span></div>
+          </div>
+          <figcaption><b>Card on a cloud + stepper.</b> The project intro card. It always rests on a cloud and is never boxed by a frame. The stepper below shows which world you're in.</figcaption>
+        </figure>
+
+        <figure class="ds-cell">
+          <div class="ds-stage ds-stage--water ds-row ds-row--center">
+            <div class="help">
+              <svg viewBox="0 0 124 72" fill="none" stroke="currentColor" stroke-width="1"><circle cx="38" cy="36" r="34"/><circle cx="86" cy="36" r="34"/><path d="M4 36h58" stroke-dasharray="3 3"/><path d="M86 30v12M80 36h12"/></svg>
+              <span>Move your mouse<br />to look around.</span>
+            </div>
+            <div class="ds-tagdemo"><div class="tag tag--live" style="left: 20px; top: 70px"><span class="tag__label">Project · Tide</span><span class="tag__leader"></span></div></div>
+          </div>
+          <figcaption><b>Help card + tag.</b> Warm paper for instructions. Tags pin a label to a point in 3D with a dashed leader line. The lime dot means it's live or found.</figcaption>
+        </figure>
+
+        <figure class="ds-cell">
+          <div class="ds-stage ds-stage--violet ds-row ds-row--center ds-orbitdemo">
+            <svg class="orbit-ring" viewBox="0 0 340 340" aria-hidden="true"><circle class="ring-dash" cx="170" cy="170" r="166"/><circle class="ring-solid" cx="170" cy="170" r="98"/></svg>
+            <div class="caption ds-orbitdemo__l"><p class="caption__title">Ideas launch into orbit.</p></div>
+            <div class="caption ds-orbitdemo__r"><p class="caption__title">I make them land.</p></div>
+          </div>
+          <figcaption><b>Orbit ring + story caption.</b> The story beat: two short lines flank the pod while a lime ring locks onto it. The dashed outer ring turns very slowly.</figcaption>
+        </figure>
+
+        <figure class="ds-cell">
+          <div class="ds-stage ds-stage--violet ds-row ds-row--center">
+            <div class="dots" style="color: var(--paper-50)"><button aria-label="World 1"></button><button aria-current="true" aria-label="World 2"></button><button aria-label="World 3"></button></div>
+            <div class="stepper"><span class="stepper__node" data-done></span><span class="stepper__rail"></span><span class="stepper__node" aria-current="step"></span><span class="stepper__rail"></span><span class="stepper__node"></span></div>
+          </div>
+          <figcaption><b>Dots + progress.</b> Dots switch between windows in the cockpit. Stepper nodes turn lime once a world has been visited.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===================================================== TOON -->
+    <section class="ds-section" id="toon">
+      <header class="ds-head">
+        <p class="ds-num">05</p>
+        <h2 class="t-h1">The cartoon look</h2>
+        <p class="ds-lede">Three.js, drawn like a cel. Three stacked rules make the look, and every world and prop follows them.</p>
+      </header>
+      <div class="ds-rules">
+        <div class="ds-rule"><div class="ds-bands"><i style="background:#3d1b5c"></i><i style="background:#5b2785"></i><i style="background:#8a47b8"></i></div><h3 class="t-h3">1 · Three tones</h3><p>Light hits a surface in exactly three hard bands: shade, base, light. Rocks and crystals are faceted; hills, pods and clouds are smooth.</p></div>
+        <div class="ds-rule"><div class="ds-inkdemo"><svg viewBox="0 0 160 90" fill="none"><path d="M10 80 Q 40 20 80 40 T 150 30 L150 90 L10 90Z" fill="#2a7a6f" stroke="#160923"/><circle cx="70" cy="38" r="20" fill="#dba2ff" stroke="#160923"/></svg></div><h3 class="t-h3">2 · Hairline ink</h3><p>A post pass draws 1px lines wherever depth, crease or object changes. Each line is a darker shade of the surface under it, and lines fade into the fog with distance.</p></div>
+        <div class="ds-rule"><div class="ds-graindemo"></div><h3 class="t-h3">3 · Grain on top</h3><p>One animated noise layer sits over the canvas and the UI together, so paper and paint feel like the same print.</p></div>
+      </div>
+      <h3 class="t-h3 ds-sub">3D kit</h3>
+      <div class="ds-props"><canvas id="props-gl" aria-hidden="true"></canvas><div class="ds-tags" id="props-tags"></div></div>
+    </section>
+
+    <!-- ===================================================== WORLDS -->
+    <section class="ds-worlds" id="worlds">
+      <header class="ds-head ds-head--center">
+        <p class="ds-num">06</p>
+        <h2 class="t-h1">Worlds: the project cockpit</h2>
+        <p class="ds-lede">The Selected Work block on Home and the way into the Work page. Each window is one category with its own live world. Swipe, drag or use the arrow keys, and press Explore to open that category's filter.</p>
+      </header>
+      <div class="cockpit" id="cockpit">
+        <div class="cockpit__track" id="track">
+          <article class="window" data-world="earth"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Development</h3><p>Things that run on solid ground</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+          <article class="window" data-world="water"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>UI/UX Design</h3><p>Interfaces that flow</p></div><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+          <article class="window" data-world="desert"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Graphic Design</h3><p>Bold shapes in hard light</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+          <article class="window" data-world="space"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Branding</h3><p>Identities built to launch</p></div><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+          <article class="window" data-world="dusk"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Research</h3><p>Finding the stars between the data</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+        </div>
+        <div class="console" aria-hidden="false">
+          <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor"><path d="M10 40 L290 30 M10 80 L290 75 M10 120 L290 118 M60 20 L50 140 M130 20 L125 140 M200 20 L200 140 M260 20 L265 140"/></svg></div></div>
+          <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 400 140" fill="none" stroke="currentColor"><path d="M140 40 h-20 v20 M260 40 h20 v20 M200 30 V140 M120 140 A 80 60 0 0 1 280 140"/></svg><div class="console__center"><span>Swipe to explore the worlds</span><div class="dots" id="dots"></div></div></div></div>
+          <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor"><circle cx="230" cy="140" r="90"/><circle cx="230" cy="140" r="50" stroke-dasharray="3 4"/></svg></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== PAGE PATTERNS -->
+    <section class="ds-section" id="patterns">
+      <header class="ds-head">
+        <p class="ds-num">07</p>
+        <h2 class="t-h1">Page patterns</h2>
+        <p class="ds-lede">The blocks every page is built from, in sitemap order: Home, then Work and its case studies, then Contact. Scroll to see the default reveal: blocks fade up and siblings stagger by 70ms.</p>
+      </header>
+
+      <div class="ds-sitemap" data-reveal>
+        <div class="ds-page"><b>Home</b><ol><li>Hero</li><li>About preview</li><li>Selected work</li><li>Experience timeline</li><li>Education</li><li>Skills &amp; technologies</li><li>Achievements</li><li>Currently exploring</li><li>Personal interests</li><li>Contact CTA</li><li>Footer</li></ol></div>
+        <div class="ds-page"><b>Work</b><ol><li>All projects</li><li>Development</li><li>UI/UX design</li><li>Graphic design</li><li>Branding</li><li>Research</li></ol></div>
+        <div class="ds-page"><b>Case study</b> <small>one per project</small><ol><li>Hero (category sky)</li><li>Meta: role, year, team, tools</li><li>Sections + figures</li><li>Outcomes</li><li>Next project</li></ol></div>
+        <div class="ds-page"><b>Contact</b><ol><li>Get in touch</li><li>Contact form</li><li>Email</li><li>Social links</li><li>Location</li></ol></div>
+      </div>
+
+      <h3 class="ds-group">Home</h3>
+
+      <div class="ds-block" data-reveal><p class="ds-label">About preview</p>
+        <div class="about">
+          <figure class="portrait"><div class="portrait__glass"><span>Your photo</span></div></figure>
+          <div>
+            <div class="sec-head" style="margin:0"><span class="eyebrow">About me</span></div>
+            <p class="about__lead">I'm Shubh, a developer and designer who turns odd ideas into things people actually use. Usually somewhere between code and canvas.</p>
+            <dl class="facts"><div><dt>Based in</dt><dd>Your city, IN</dd></div><div><dt>Studying</dt><dd>B.Tech CSE</dd></div><div><dt>Focus</dt><dd>Web · 3D · UI</dd></div></dl>
+            <a class="link" href="#" style="display:inline-block;margin-top:24px">More about me →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Selected work · project cards</p>
+        <div class="project-grid">
+          <a class="project-card" href="#" data-cat="development" data-reveal><div class="project-card__media" data-scene="development"><span class="pill project-card__tag">Development</span></div><div class="project-card__row"><div><p class="project-card__title">Project Atlas</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+          <a class="project-card" href="#" data-cat="uiux" data-reveal><div class="project-card__media" data-scene="uiux"><span class="pill project-card__tag">UI/UX</span></div><div class="project-card__row"><div><p class="project-card__title">Project Tide</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+          <a class="project-card" href="#" data-cat="research" data-reveal><div class="project-card__media" data-scene="research"><span class="pill project-card__tag">Research</span></div><div class="project-card__row"><div><p class="project-card__title">Project Ember</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Experience timeline</p>
+        <div class="timeline">
+          <article class="timeline__item" data-now data-reveal><p class="timeline__when"><b>2025 to now</b>Remote</p><div><p class="timeline__role">Frontend Developer</p><p class="timeline__org">Company name</p><p class="timeline__body">What you owned, what you shipped and the number that moved. Two lines max, so the timeline stays scannable.</p><div class="chips"><span class="chip"><i></i>React</span><span class="chip"><i style="--c:#d28eff"></i>three.js</span><span class="chip"><i style="--c:#ffd84a"></i>Figma</span></div></div></article>
+          <article class="timeline__item" data-reveal><p class="timeline__when"><b>2024</b>Internship · 3 mo</p><div><p class="timeline__role">UI/UX Design Intern</p><p class="timeline__org">Studio name</p><p class="timeline__body">What you owned, what you shipped and the number that moved.</p></div></article>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Education</p>
+        <div class="ds-two">
+          <div class="edu" data-reveal><span class="edu__crest">U</span><div><p class="edu__school">University name</p><p class="edu__deg">B.Tech, Computer Science &amp; Engineering</p></div><p class="edu__years">2024 to 2028<br /><span style="color:var(--stone-500);font-weight:400">CGPA 9.1</span></p></div>
+          <div class="edu" data-reveal><span class="edu__crest">S</span><div><p class="edu__school">School name</p><p class="edu__deg">Class XII, Science</p></div><p class="edu__years">2022 to 2024<br /><span style="color:var(--stone-500);font-weight:400">94%</span></p></div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Skills &amp; technologies</p>
+        <div class="skills">
+          <div class="skill-group" data-reveal><h4>Languages <span>daily</span></h4><div class="chips"><span class="chip"><i></i>TypeScript</span><span class="chip"><i></i>Python</span><span class="chip"><i></i>C++</span><span class="chip"><i></i>SQL</span></div></div>
+          <div class="skill-group" data-reveal><h4>Frameworks <span>shipping with</span></h4><div class="chips"><span class="chip"><i style="--c:#d28eff"></i>React</span><span class="chip"><i style="--c:#d28eff"></i>Next.js</span><span class="chip"><i style="--c:#d28eff"></i>three.js</span><span class="chip"><i style="--c:#d28eff"></i>Node</span></div></div>
+          <div class="skill-group" data-reveal><h4>Design <span>tools</span></h4><div class="chips"><span class="chip"><i style="--c:#ffd84a"></i>Figma</span><span class="chip"><i style="--c:#ffd84a"></i>Illustrator</span><span class="chip"><i style="--c:#ffd84a"></i>Blender</span><span class="chip"><i style="--c:#ffd84a"></i>After Effects</span></div></div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Achievements &amp; recognition</p>
+        <div class="awards">
+          <article class="award" data-reveal><span class="award__medal"><svg viewBox="0 0 64 64"><path d="M32 3l7 9 11-2 2 11 9 7-6 9 3 11-11 3-4 10-11-5-11 5-4-10-11-3 3-11-6-9 9-7 2-11 11 2z" fill="#ffd84a" stroke="#160923" stroke-width="2.5" stroke-linejoin="round"/></svg><b>1st</b></span><p class="award__title">Hackathon name: Winner</p><p class="award__meta">Organiser · 2025</p></article>
+          <article class="award" data-reveal><span class="award__medal"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="#7bf583" stroke="#160923" stroke-width="2.5"/><circle cx="32" cy="32" r="20" fill="none" stroke="#160923" stroke-width="1.5" stroke-dasharray="3 3"/></svg><b>★</b></span><p class="award__title">Scholarship or fellowship</p><p class="award__meta">Organisation · 2024</p></article>
+          <article class="award" data-reveal><span class="award__medal"><svg viewBox="0 0 64 64"><rect x="6" y="6" width="52" height="52" rx="14" fill="#d28eff" stroke="#160923" stroke-width="2.5" transform="rotate(8 32 32)"/></svg><b>Top 5</b></span><p class="award__title">Design competition finalist</p><p class="award__meta">Event · 2024</p></article>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Currently exploring: a constellation of what you're learning</p>
+        <div class="exploring">
+          <svg viewBox="0 0 1600 700" preserveAspectRatio="none" aria-hidden="true"><path d="M0 700 L0 520 L160 600 L260 700Z M1600 700 L1600 470 L1420 590 L1340 700Z" fill="#4a1f6e" stroke="#160923" stroke-width="2"/><g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-dasharray="6 6"><path d="M240 210 L560 140 L800 330 L1100 180 L1340 300"/><path d="M800 330 L880 520"/></g></svg>
+          <div class="star" style="left:15%;top:30%;--i:0"><i></i><span>WebGPU<em>shaders &amp; compute</em></span></div>
+          <div class="star" style="left:35%;top:20%;--i:1"><i></i><span>Rust<em>week 3</em></span></div>
+          <div class="star" style="left:50%;top:47%;--i:2"><i></i><span>Motion design<em>After Effects</em></span></div>
+          <div class="star" style="left:55%;top:74%;--i:3"><i></i><span>Japanese<em>N5</em></span></div>
+          <div class="star" style="left:69%;top:26%;--i:4"><i></i><span>LLM agents<em>tool use</em></span></div>
+          <div class="star" style="left:84%;top:43%;--i:5"><i></i><span>Blender<em>toon shading</em></span></div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Personal interests</p>
+        <div class="interests">
+          <div class="interest" style="background:var(--sky-earth)" data-reveal><b>Film photography</b></div>
+          <div class="interest" style="background:var(--sky-space)" data-reveal><b>Badminton</b></div>
+          <div class="interest" style="background:var(--sky-dusk)" data-reveal><b>Indie games</b></div>
+          <div class="interest" style="background:linear-gradient(180deg,#3f7ff0,#9cc0ff 55%,#f29a72 56%,#d4704e)" data-reveal><b>Sketching</b></div>
+          <div class="interest" style="background:var(--sky-water)" data-reveal><b>Lo-fi playlists</b></div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Contact CTA</p>
+        <div class="cta-band">
+          <div><span class="eyebrow" style="color:var(--violet-500)">Open to work</span><h2>Got a weird idea? Let's land it.</h2><p>Internships, freelance and collaborations. I reply within two days.</p>
+            <div class="cta-band__actions"><a class="btn" href="#"><span class="btn__label">Start a conversation</span><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Download CV</span></a></div></div>
+          <div class="status-card"><p class="status-card__live">Available from Jan 2027</p><dl><div><dt>Replies</dt><dd>within 2 days</dd></div><div><dt>Best for</dt><dd>web, 3D, product UI</dd></div></dl></div>
+        </div>
+      </div>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Footer</p>
+        <footer class="site-footer" style="border-radius:var(--r-2xl)">
+          <div class="site-footer__brand"><span class="brand">Shubh Jadiya</span><p>Developer &amp; designer. Exploring the unknown, one world at a time.</p></div>
+          <div><h5>Pages</h5><ul><li><a class="link" href="#">Home</a></li><li><a class="link" href="#">Work</a></li><li><a class="link" href="#">Contact</a></li></ul></div>
+          <div><h5>Work</h5><ul><li><a class="link" href="#">Development</a></li><li><a class="link" href="#">UI/UX</a></li><li><a class="link" href="#">Graphic</a></li><li><a class="link" href="#">Branding</a></li><li><a class="link" href="#">Research</a></li></ul></div>
+          <div><h5>Elsewhere</h5><ul><li><a class="link" href="#">GitHub</a></li><li><a class="link" href="#">LinkedIn</a></li><li><a class="link" href="#">Behance</a></li><li><a class="link" href="#">Instagram</a></li></ul></div>
+          <div class="site-footer__base"><span>© 2026 Shubh Jadiya</span><a class="link" href="#top">Back to orbit ↑</a></div>
+        </footer>
+      </div>
+
+      <h3 class="ds-group">Work &amp; case study</h3>
+
+      <div class="ds-block" data-reveal><p class="ds-label">Filters (Work page). Click one to filter the cards above.</p>
+        <div class="filters" role="tablist" id="filters">
+          <button role="tab" aria-selected="true" data-f="all">All projects <sup>12</sup></button><button role="tab" aria-selected="false" data-f="development">Development <sup>4</sup></button><button role="tab" aria-selected="false" data-f="uiux">UI/UX Design <sup>3</sup></button><button role="tab" aria-selected="false" data-f="graphic">Graphic Design <sup>2</sup></button><button role="tab" aria-selected="false" data-f="branding">Branding <sup>2</sup></button><button role="tab" aria-selected="false" data-f="research">Research <sup>1</sup></button>
+        </div>
+      </div>
+
+      <div class="ds-block ds-paperblock on-paper" data-reveal><p class="ds-label">Case study</p>
+        <header class="case-hero" style="background:var(--sky-water)"><div data-scene="uiux" class="case-hero__scene"></div><span class="pill" style="justify-self:start;margin-bottom:20px">UI/UX Design · 2025</span><h1>Project Tide</h1><p>One sentence on the problem, one on what you made, one on what changed.</p></header>
+        <dl class="case-meta"><div><dt>Role</dt><dd>Lead designer &amp; dev</dd></div><div><dt>Year</dt><dd>2025</dd></div><div><dt>Team</dt><dd>3 people</dd></div><div><dt>Tools</dt><dd>Figma, React, three.js</dd></div></dl>
+        <section class="case-section"><div class="case-section__label"><span>01</span><b>The problem</b></div><div class="case-section__body"><p>Write it like a story. Who was stuck, on what, and why it mattered. Keep paragraphs short. The label column on the left stays pinned while you read.</p><figure class="case-figure"><div style="background:var(--sky-dusk)"></div><figcaption>Figure caption: what to look at in this image.</figcaption></figure></div></section>
+        <section class="case-section"><div class="case-section__label"><span>02</span><b>Outcome</b></div><div class="case-section__body"><div class="case-stats"><div><b>+38%</b><span>task completion</span></div><div><b>2.1s</b><span>faster first load</span></div><div><b>4.8★</b><span>user rating</span></div></div></div></section>
+        <a class="case-next" href="#"><div><small>Next project</small><b>Project Ember</b></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      </div>
+
+      <h3 class="ds-group">Contact</h3>
+
+      <div class="ds-block ds-paperblock on-paper" data-reveal>
+        <div class="ds-contact">
+          <div>
+            <div class="sec-head"><span class="eyebrow">Get in touch</span><p class="t-h1">Say hello.</p><p style="color:var(--stone-500)">Tell me what you're building. I read everything.</p></div>
+            <form class="form" onsubmit="event.preventDefault()">
+              <div class="field"><label for="f-name">Name</label><input id="f-name" placeholder="Ada Lovelace" autocomplete="name" /></div>
+              <div class="field" data-error><label for="f-mail">Email</label><input id="f-mail" type="email" value="ada@" /><p class="field__help">That email looks incomplete.</p></div>
+              <div class="field full"><fieldset><legend>What's it about?</legend><div class="choices"><label class="choice"><input type="checkbox" checked /><span>Internship</span></label><label class="choice"><input type="checkbox" /><span>Freelance</span></label><label class="choice"><input type="checkbox" /><span>Collab</span></label><label class="choice"><input type="checkbox" /><span>Just saying hi</span></label></div></fieldset></div>
+              <div class="field full"><label for="f-msg">Message</label><textarea id="f-msg" placeholder="Hey Shubh, I've got an idea…"></textarea><p class="field__help">A few lines is plenty.</p></div>
+              <div class="full"><button class="btn" type="submit"><span class="btn__label">Send message</span><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div>
+            </form>
+          </div>
+          <div class="ds-contact__side">
+            <div class="contact-card"><small>Email</small><div class="contact-card__email"><span>hello@yourdomain.com</span><button class="copy" data-copy="hello@yourdomain.com">Copy</button></div></div>
+            <ul class="socials"><li><a href="#">GitHub <span>@handle ↗</span></a></li><li><a href="#">LinkedIn <span>/in/handle ↗</span></a></li><li><a href="#">Behance <span>@handle ↗</span></a></li><li><a href="#">Instagram <span>@handle ↗</span></a></li></ul>
+            <div class="location"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="44" fill="#7a3aa8" stroke="#160923" stroke-width="2.5"/><path d="M30 46c12 6 18-4 30 2s14 16 28 10M24 72c14-6 22 6 36 0s18-8 34-2" fill="none" stroke="#b06fe0" stroke-width="5" stroke-linecap="round"/><ellipse cx="60" cy="60" rx="58" ry="14" fill="none" stroke="#d28eff" stroke-width="2" transform="rotate(-18 60 60)" stroke-dasharray="4 4"/><path d="M66 30c0-7 5-12 11-12s11 5 11 12c0 9-11 19-11 19S66 39 66 30z" fill="#7bf583" stroke="#160923" stroke-width="2.5"/><circle cx="77" cy="30" r="4" fill="#160923"/></svg><div><b>Your City, India</b><span>Open to remote · IST (UTC+5:30)</span><time id="local-time">--:--</time></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== MOTION -->
+    <section class="ds-section ds-section--paper" id="motion">
+      <header class="ds-head">
+        <p class="ds-num">09</p>
+        <h2 class="t-h1">Motion</h2>
+        <p class="ds-lede">The camera glides and the UI settles. Small controls get a cartoon overshoot. Everything drifts a little, because nothing in orbit stands still. Hover a row to play it.</p>
+      </header>
+      <div class="ds-motion">
+        <div class="ds-ease" style="--e: var(--ease-out); --d: var(--d-slow)"><code>ease-out · 900ms</code><span>UI arrives</span><i></i></div>
+        <div class="ds-ease" style="--e: var(--ease-in-out); --d: var(--d-scene)"><code>ease-in-out · 1800ms</code><span>Camera moves between scenes</span><i></i></div>
+        <div class="ds-ease" style="--e: var(--ease-spring); --d: var(--d-base)"><code>ease-spring · 420ms</code><span>Buttons, chips, dots</span><i></i></div>
+      </div>
+    </section>
+
+    <footer class="ds-foot"><span>Orbit DS · Shubh Jadiya</span><span>Built with three.js, toon shaders and too many clouds</span></footer>
+
+    <script type="module" src="/src/ds/page.js"></script>
+  </body>
+</html>

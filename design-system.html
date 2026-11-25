@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Orbit · Design system · Shubh Jadiya</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#5b2785" />
     <link rel="stylesheet" href="/src/ds/tokens.css" />
     <link rel="stylesheet" href="/src/ds/components.css" />
@@ -174,20 +175,18 @@
     <section class="ds-worlds" id="worlds">
       <header class="ds-head ds-head--center">
         <p class="ds-num">06</p>
-        <h2 class="t-h1">Worlds: the project cockpit</h2>
-        <p class="ds-lede">The Selected Work block on Home and the way into the Work page. Each window is one category with its own live world. Swipe, drag or use the arrow keys, and press Explore to open that category's filter.</p>
+        <h2 class="t-h1">Cockpit: the site’s doors</h2>
+        <p class="ds-lede">The end of the Home journey. Each window is a door to a page and shows that page’s world. It drifts in an endless loop: hover to stop it, drag to fling it, or use the arrow keys.</p>
       </header>
       <div class="cockpit" id="cockpit">
         <div class="cockpit__track" id="track">
-          <article class="window" data-world="earth"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Development</h3><p>Things that run on solid ground</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
-          <article class="window" data-world="water"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>UI/UX Design</h3><p>Interfaces that flow</p></div><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Explore</span></a></div></div></article>
-          <article class="window" data-world="desert"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Graphic Design</h3><p>Bold shapes in hard light</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
-          <article class="window" data-world="space"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Branding</h3><p>Identities built to launch</p></div><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Explore</span></a></div></div></article>
-          <article class="window" data-world="dusk"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Research</h3><p>Finding the stars between the data</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Explore</span></a></div></div></article>
+          <article class="window" data-world="earth"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>About</h3><p>Who I am, how I work and what I’m learning</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Enter</span></a></div></div></article>
+          <article class="window" data-world="space"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Work</h3><p>Security tools, AI products and design systems</p></div><a class="btn btn--sm btn--light" href="#"><span class="btn__label">Enter</span></a></div></div></article>
+          <article class="window" data-world="water"><div class="window__glass"><canvas aria-hidden="true"></canvas><div class="window__copy"><div><h3>Contact</h3><p>Ideas, internships and collaborations</p></div><a class="btn btn--sm" href="#"><span class="btn__label">Enter</span></a></div></div></article>
         </div>
         <div class="console" aria-hidden="false">
           <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor"><path d="M10 40 L290 30 M10 80 L290 75 M10 120 L290 118 M60 20 L50 140 M130 20 L125 140 M200 20 L200 140 M260 20 L265 140"/></svg></div></div>
-          <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 400 140" fill="none" stroke="currentColor"><path d="M140 40 h-20 v20 M260 40 h20 v20 M200 30 V140 M120 140 A 80 60 0 0 1 280 140"/></svg><div class="console__center"><span>Swipe to explore the worlds</span><div class="dots" id="dots"></div></div></div></div>
+          <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 400 140" fill="none" stroke="currentColor"><path d="M140 40 h-20 v20 M260 40 h20 v20 M200 30 V140 M120 140 A 80 60 0 0 1 280 140"/></svg><div class="console__center"><span>Swipe to explore the worlds</span><div class="dots" id="dots"></div></div><span class="console__planet"></span><span class="console__pill"></span></div></div>
           <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor"><circle cx="230" cy="140" r="90"/><circle cx="230" cy="140" r="50" stroke-dasharray="3 4"/></svg></div></div>
         </div>
       </div>
@@ -202,8 +201,8 @@
       </header>
 
       <div class="ds-sitemap" data-reveal>
-        <div class="ds-page"><b>Home</b><ol><li>Hero</li><li>About preview</li><li>Selected work</li><li>Experience timeline</li><li>Education</li><li>Skills &amp; technologies</li><li>Achievements</li><li>Currently exploring</li><li>Personal interests</li><li>Contact CTA</li><li>Footer</li></ol></div>
-        <div class="ds-page"><b>Work</b><ol><li>All projects</li><li>Development</li><li>UI/UX design</li><li>Graphic design</li><li>Branding</li><li>Research</li></ol></div>
+        <div class="ds-page"><b>Home</b><ol><li>Home planet (interactive hero)</li><li>Launch</li><li>Flight with facts</li><li>Into the pod window</li><li>Cockpit: About · Work · Contact</li><li>Footer</li></ol></div>
+        <div class="ds-page"><b>Work</b><ol><li>All projects, one list</li><li>Project cards</li><li>Each opens its case study</li></ol></div>
         <div class="ds-page"><b>Case study</b> <small>one per project</small><ol><li>Hero (category sky)</li><li>Meta: role, year, team, tools</li><li>Sections + figures</li><li>Outcomes</li><li>Next project</li></ol></div>
         <div class="ds-page"><b>Contact</b><ol><li>Get in touch</li><li>Contact form</li><li>Email</li><li>Social links</li><li>Location</li></ol></div>
       </div>
@@ -224,9 +223,9 @@
 
       <div class="ds-block" data-reveal><p class="ds-label">Selected work · project cards</p>
         <div class="project-grid">
-          <a class="project-card" href="#" data-cat="development" data-reveal><div class="project-card__media" data-scene="development"><span class="pill project-card__tag">Development</span></div><div class="project-card__row"><div><p class="project-card__title">Project Atlas</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
-          <a class="project-card" href="#" data-cat="uiux" data-reveal><div class="project-card__media" data-scene="uiux"><span class="pill project-card__tag">UI/UX</span></div><div class="project-card__row"><div><p class="project-card__title">Project Tide</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
-          <a class="project-card" href="#" data-cat="research" data-reveal><div class="project-card__media" data-scene="research"><span class="pill project-card__tag">Research</span></div><div class="project-card__row"><div><p class="project-card__title">Project Ember</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+          <a class="project-card" href="#" data-world="earth" data-reveal><div class="project-card__media" data-scene="earth"><span class="pill project-card__tag">2026 · Live</span></div><div class="project-card__row"><div><p class="project-card__title">Project Atlas</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+          <a class="project-card" href="#" data-world="water" data-reveal><div class="project-card__media" data-scene="water"><span class="pill project-card__tag">2026</span></div><div class="project-card__row"><div><p class="project-card__title">Project Tide</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
+          <a class="project-card" href="#" data-world="dusk" data-reveal><div class="project-card__media" data-scene="dusk"><span class="pill project-card__tag">2026 · Live</span></div><div class="project-card__row"><div><p class="project-card__title">Project Ember</p><p class="project-card__line">A one-line summary of what it does and why it matters</p></div><span class="btn__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div></a>
         </div>
       </div>
 
@@ -294,7 +293,7 @@
         <footer class="site-footer" style="border-radius:var(--r-2xl)">
           <div class="site-footer__brand"><span class="brand">Shubh Jadiya</span><p>Developer &amp; designer. Exploring the unknown, one world at a time.</p></div>
           <div><h5>Pages</h5><ul><li><a class="link" href="#">Home</a></li><li><a class="link" href="#">Work</a></li><li><a class="link" href="#">Contact</a></li></ul></div>
-          <div><h5>Work</h5><ul><li><a class="link" href="#">Development</a></li><li><a class="link" href="#">UI/UX</a></li><li><a class="link" href="#">Graphic</a></li><li><a class="link" href="#">Branding</a></li><li><a class="link" href="#">Research</a></li></ul></div>
+          <div><h5>Work</h5><ul><li><a class="link" href="#">All projects</a></li></ul></div>
           <div><h5>Elsewhere</h5><ul><li><a class="link" href="#">GitHub</a></li><li><a class="link" href="#">LinkedIn</a></li><li><a class="link" href="#">Behance</a></li><li><a class="link" href="#">Instagram</a></li></ul></div>
           <div class="site-footer__base"><span>© 2026 Shubh Jadiya</span><a class="link" href="#top">Back to orbit ↑</a></div>
         </footer>
@@ -302,14 +301,10 @@
 
       <h3 class="ds-group">Work &amp; case study</h3>
 
-      <div class="ds-block" data-reveal><p class="ds-label">Filters (Work page). Click one to filter the cards above.</p>
-        <div class="filters" role="tablist" id="filters">
-          <button role="tab" aria-selected="true" data-f="all">All projects <sup>12</sup></button><button role="tab" aria-selected="false" data-f="development">Development <sup>4</sup></button><button role="tab" aria-selected="false" data-f="uiux">UI/UX Design <sup>3</sup></button><button role="tab" aria-selected="false" data-f="graphic">Graphic Design <sup>2</sup></button><button role="tab" aria-selected="false" data-f="branding">Branding <sup>2</sup></button><button role="tab" aria-selected="false" data-f="research">Research <sup>1</sup></button>
-        </div>
-      </div>
+      
 
       <div class="ds-block ds-paperblock on-paper" data-reveal><p class="ds-label">Case study</p>
-        <header class="case-hero" style="background:var(--sky-water)"><div data-scene="uiux" class="case-hero__scene"></div><span class="pill" style="justify-self:start;margin-bottom:20px">UI/UX Design · 2025</span><h1>Project Tide</h1><p>One sentence on the problem, one on what you made, one on what changed.</p></header>
+        <header class="case-hero" style="background:var(--sky-water)"><div data-scene="water" class="case-hero__scene"></div><span class="pill" style="justify-self:start;margin-bottom:20px">2025 · Live</span><h1>Project Tide</h1><p>One sentence on the problem, one on what you made, one on what changed.</p></header>
         <dl class="case-meta"><div><dt>Role</dt><dd>Lead designer &amp; dev</dd></div><div><dt>Year</dt><dd>2025</dd></div><div><dt>Team</dt><dd>3 people</dd></div><div><dt>Tools</dt><dd>Figma, React, three.js</dd></div></dl>
         <section class="case-section"><div class="case-section__label"><span>01</span><b>The problem</b></div><div class="case-section__body"><p>Write it like a story. Who was stuck, on what, and why it mattered. Keep paragraphs short. The label column on the left stays pinned while you read.</p><figure class="case-figure"><div style="background:var(--sky-dusk)"></div><figcaption>Figure caption: what to look at in this image.</figcaption></figure></div></section>
         <section class="case-section"><div class="case-section__label"><span>02</span><b>Outcome</b></div><div class="case-section__body"><div class="case-stats"><div><b>+38%</b><span>task completion</span></div><div><b>2.1s</b><span>faster first load</span></div><div><b>4.8★</b><span>user rating</span></div></div></div></section>

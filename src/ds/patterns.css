@@ -55,11 +55,11 @@
 .on-paper .project-card__line { color: var(--stone-500); }
 .project-card .btn__chip { width: 40px; height: 40px; flex: none; box-shadow: inset 0 0 0 1px rgba(22, 9, 35, 0.15); }
 .project-card:hover .btn__chip { transform: rotate(-8deg) scale(1.06); }
-.project-card[data-cat='development'] { --sky: var(--sky-earth); }
-.project-card[data-cat='uiux'] { --sky: var(--sky-water); }
-.project-card[data-cat='graphic'] { --sky: linear-gradient(180deg, #3f7ff0, #9cc0ff 55%, #f29a72 56%, #d4704e); }
-.project-card[data-cat='branding'] { --sky: var(--sky-space); }
-.project-card[data-cat='research'] { --sky: var(--sky-dusk); }
+.project-card[data-world='earth'] { --sky: var(--sky-earth); }
+.project-card[data-world='water'] { --sky: var(--sky-water); }
+.project-card[data-world='desert'] { --sky: linear-gradient(180deg, #3f7ff0, #9cc0ff 55%, #f29a72 56%, #d4704e); }
+.project-card[data-world='space'] { --sky: var(--sky-space); }
+.project-card[data-world='dusk'] { --sky: var(--sky-dusk); }
 .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--s-7) var(--s-5); }
 
 /* ---------- Filter tabs (Work page) -------------------------------------- */
@@ -199,9 +199,37 @@
 .location span { display: block; margin-top: 4px; font-size: var(--t-small); color: var(--fg-muted); }
 .location time { display: inline-block; margin-top: 10px; font-variant-numeric: tabular-nums; font-weight: var(--w-medium); color: var(--lime-400); }
 
+
+/* ---------- Space footer: a quiet stretch of the asteroid field, with paper cards pinned to rocks --- */
+.space-footer { position: relative; height: 100vh; min-height: 680px; overflow: hidden; background: #22102f; color: var(--ink-900); }
+.space-footer::before { content: ''; position: absolute; inset: 0 0 auto; height: 34vh; z-index: 1; pointer-events: none; background: linear-gradient(#22102f, transparent); } /* continues the cockpit's fly-out */
+.space-footer__head { position: absolute; z-index: 2; left: 0; right: 0; top: max(96px, 12vh); display: grid; justify-items: center; gap: 14px; padding: 0 var(--gutter); text-align: center; color: var(--paper-50); pointer-events: none; }
+.space-footer__kicker { display: inline-flex; align-items: center; gap: 10px; font-size: var(--t-small); font-weight: var(--w-medium); color: var(--lilac-200); }
+.space-footer__kicker::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--lime-400); box-shadow: 0 0 0 4px rgba(123, 245, 131, 0.25); }
+.space-footer__title { font-size: clamp(44px, 6vw, 96px); line-height: 0.88; letter-spacing: -0.035em; font-weight: var(--w-medium); text-shadow: 0 2px 0 rgba(22, 9, 35, 0.3); }
+.space-footer > canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.space-footer__cards { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.fcard { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); will-change: transform; }
+.fcard__card { pointer-events: auto; width: 280px; transition: transform var(--d-base) var(--ease-spring); padding: 18px 18px 20px; border-radius: var(--r-lg); background: rgba(251, 251, 251, 0.96); box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.15), var(--lift-2); }
+.fcard__card .eyebrow { color: var(--violet-500); font-size: var(--t-micro); }
+.fcard__lead { margin-top: 8px; font-size: 17px; line-height: 1.35; letter-spacing: -0.01em; font-weight: var(--w-medium); }
+.fcard__card .btn { margin-top: 16px; }
+.fcard__links { list-style: none; display: grid; margin-top: 8px; }
+.fcard__links a { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px dashed rgba(22, 9, 35, 0.15); font-size: 17px; font-weight: var(--w-medium); letter-spacing: -0.01em; transition: color var(--d-fast), padding var(--d-base) var(--ease-out); }
+.fcard__links li:last-child a { border-bottom: 0; }
+.fcard__links a span { font-size: var(--t-small); font-weight: var(--w-regular); color: var(--stone-500); }
+.fcard__links a[href]:hover { color: var(--violet-500); padding-left: 6px; }
+.fcard__links a[aria-disabled='true'] { opacity: 0.45; }
+.fcard__card:hover { transform: translateY(-4px); }
+.fcard__leader { width: 1px; height: 56px; background: repeating-linear-gradient(var(--paper-50) 0 4px, transparent 4px 7px); }
+.space-footer__base { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); padding: var(--s-4) var(--gutter); color: var(--ink-900); font-size: var(--t-small); font-weight: var(--w-medium); }
+.space-footer__base .link { color: inherit; }
+@media (max-width: 760px) { .fcard__card { width: 240px; } .fcard__title { font-size: 24px; } }
+
 @media (max-width: 860px) {
   .about, .cta-band, .case-section, .timeline__item, .location { grid-template-columns: 1fr; }
   .facts, .case-meta, .case-stats, .form, .site-footer { grid-template-columns: 1fr 1fr; }
   .edu { grid-template-columns: auto 1fr; } .edu__years { grid-column: 2; text-align: left; }
   .case-section__label { position: static; }
 }
+

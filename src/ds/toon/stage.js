@@ -26,6 +26,8 @@ const POST_FS = /* glsl */ `
   uniform sampler2D tColor, tInk, tDepth;
   uniform vec2 uRes; uniform float uLine, uAlpha, uNear, uFar, uFadeNear, uFadeFar, uTint, uBoil, uTime;
   uniform vec3 uInk;
+  // dimensions: 0 shipped (colour) · 1 sketch (pencil on paper) · 2 blueprint
+  uniform sampler2D tMask; uniform float uMaskOn, uBaseView, uLensView;
   varying vec2 vUv;
   float lin(vec2 uv) { return -perspectiveDepthToViewZ(texture2D(tDepth, uv).x, uNear, uFar); }
   float h(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -36,7 +38,8 @@ const POST_FS = /* glsl */ `
     vec2 px = uLine / uRes;
     // line boil: the ink is re-"drawn" 8 times a second with a slightly different wobble
     float frame = floor(uTime * 8.0);
-    vec2 boil = (vec2(vn(vUv * 9.0 + frame * 3.1), vn(vUv * 9.0 + frame * 5.7 + 17.0)) - 0.5) * uBoil / uRes * 3.0;
+    float boilAmt = max(uBoil, (uBaseView > 0.5 || uMaskOn > 0.5) ? 1.4 : 0.0);   // drawings wobble
+    vec2 boil = (vec2(vn(vUv * 9.0 + frame * 3.1), vn(vUv * 9.0 + frame * 5.7 + 17.0)) - 0.5) * boilAmt / uRes * 3.0;
     vec2 uv = vUv + boil;
     vec4 c = texture2D(tInk, uv);
     float dc = lin(uv);
@@ -52,7 +55,37 @@ const POST_FS = /* glsl */ `
     }
     float fade = 1.0 - smoothstep(uFadeNear, uFadeFar, dc);
     vec3 line = mix(col * 0.32, uInk, uTint);               // hairline: darker shade of the surface · cartoon: pure ink
-    gl_FragColor = vec4(mix(col, line, edge * fade * uAlpha), 1.0);
+    vec3 shipped = mix(col, line, edge * fade * uAlpha);
+    if (uBaseView < 0.5 && uMaskOn < 0.5) { gl_FragColor = vec4(shipped, 1.0); return; }
+
+    // the other dimensions, drawn from the same scene
+    float bg = step(uFar * 0.97, dc);                        // sky / nothing drawn
+    float lum = dot(col, vec3(0.299, 0.587, 0.114));
+    vec2 fc = gl_FragCoord.xy;
+    float e = edge * (1.0 - bg) * (0.55 + 0.45 * fade);
+    // sketch: graphite on warm paper, with hatching in the shadows
+    float shade = 1.0 - smoothstep(0.18, 0.75, lum);
+    float h1 = step(0.62, fract((fc.x + fc.y) / 7.0)) * step(0.42, shade);
+    float h2 = step(0.62, fract((fc.x - fc.y) / 7.0)) * step(0.7, shade);
+    vec3 paper = vec3(0.957, 0.929, 0.878) - 0.03 * vn(fc * 0.05);
+    vec3 graphite = vec3(0.17, 0.14, 0.2);
+    vec3 sketch = mix(paper, graphite, clamp(e + (h1 + h2) * 0.28 * (1.0 - bg), 0.0, 1.0));
+    // blueprint: white lines on engineering blue, with a grid
+    vec3 bpBg = vec3(0.13, 0.27, 0.66);
+    float grid = max(step(0.94, fract(fc.x / 28.0)), step(0.94, fract(fc.y / 28.0))) * 0.12 + max(step(0.985, fract(fc.x / 140.0)), step(0.985, fract(fc.y / 140.0))) * 0.18;
+    vec3 bp = bpBg + grid + (1.0 - bg) * 0.07 + h1 * 0.04;
+    bp = mix(bp, vec3(0.93, 0.96, 1.0), clamp(e * 1.2, 0.0, 1.0));
+
+    vec3 base = uBaseView < 0.5 ? shipped : uBaseView < 1.5 ? sketch : bp;
+    vec3 lens = uLensView < 0.5 ? shipped : uLensView < 1.5 ? sketch : bp;
+    float m = uMaskOn > 0.5 ? texture2D(tMask, vUv).r : 0.0;
+    vec3 outc = mix(base, lens, smoothstep(0.45, 0.55, m));
+    // the portal rim: a swirling lime band where the two dimensions meet
+    float band = smoothstep(0.28, 0.5, m) * (1.0 - smoothstep(0.5, 0.72, m));
+    float goo = 0.55 + 0.45 * vn(vUv * vec2(48.0, 30.0) + vec2(uTime * 1.7, -uTime * 1.3));
+    vec3 rim = mix(vec3(0.18, 0.62, 0.3), vec3(0.6, 1.0, 0.55), goo);
+    outc = mix(outc, rim, clamp(band * 1.8 * goo, 0.0, 1.0));
+    gl_FragColor = vec4(outc, 1.0);
   }`;
 
 export const INK_STYLES = {
@@ -88,6 +121,7 @@ export class Stage {
           uNear: { value: this.camera.near }, uFar: { value: this.camera.far },
           uFadeNear: { value: fade[0] }, uFadeFar: { value: fade[1] }, uInk: { value: new THREE.Color(INK) },
           uTint: { value: 0.5 }, uBoil: { value: 0 }, uTime: { value: 0 },
+          tMask: { value: null }, uMaskOn: { value: 0 }, uBaseView: { value: 0 }, uLensView: { value: 0 },
         },
       }));
     this.post.frustumCulled = false;
@@ -118,6 +152,14 @@ export class Stage {
     u.uLine.value = s.line * this.dpr; u.uTint.value = s.tint; u.uAlpha.value = s.alpha;
     u.uBoil.value = boil ?? s.boil;
     this.inkStyle = s;
+  }
+
+  /* Dimensions: show the scene as 'shipped' | 'sketch' | 'blueprint', and optionally a
+     portal (a mask texture, white = inside) that looks through into another one. */
+  setView(base = 'shipped', { lens = 'shipped', mask = null } = {}) {
+    const V = { shipped: 0, sketch: 1, blueprint: 2 }, u = this.post.material.uniforms;
+    u.uBaseView.value = V[base] ?? 0; u.uLensView.value = V[lens] ?? 0;
+    u.tMask.value = mask; u.uMaskOn.value = mask ? 1 : 0;
   }
 
   setWorld(world) {

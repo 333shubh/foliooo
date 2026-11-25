@@ -1,0 +1,140 @@
+/* Home page layout. Everything visual comes from the design system; this file only places it. */
+html { background: #1d0a33; }
+body.home { background: var(--violet-600); }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
+.skip { position: fixed; z-index: 50; left: var(--gutter); top: -60px; padding: 10px 14px; border-radius: var(--r-sm); background: var(--paper-50); color: var(--ink-900); transition: top var(--d-fast); }
+.skip:focus { top: var(--gutter); }
+
+/* ---------------- one sticky stage for the whole intro ------------------- */
+.launch { position: relative; height: 1000vh; }
+.launch__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: var(--ink-900); }
+.launch__anchor { position: absolute; top: 160vh; }
+
+/* the view (space) — at the end it shrinks into a rounded window, like looking out of the pod */
+.launch__view { position: absolute; inset: 0; overflow: hidden; background: var(--sky-space); will-change: transform; transform-origin: 50% 50%; }
+.launch__view canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+.launch__view canvas.is-dragging { cursor: grabbing; }
+.launch__tags { opacity: calc(1 - var(--p, 0) * 14); }
+
+/* ===== The hero: one blueprint sheet =====================================
+   Two identical layers sit on top of the canvas:
+   .sheet--line  drafting outlines (always visible)
+   .sheet--fill  the shipped version: solid type, a real paper card, only inside the portal
+   home.js sets --px / --py / --pr to the portal's centre and radius.               */
+.sheet { position: absolute; inset: 0; pointer-events: none; opacity: calc(1 - var(--p, 0) * 22); --bp-ink: #e4ecff; }
+.sheet--fill {
+  -webkit-mask-image: radial-gradient(circle var(--pr, 0px) at var(--px, 50%) var(--py, 50%), #000 calc(100% - 1px), transparent 100%);
+  mask-image: radial-gradient(circle var(--pr, 0px) at var(--px, 50%) var(--py, 50%), #000 calc(100% - 1px), transparent 100%);
+}
+.sheet__name { position: absolute; left: 0; right: 0; top: max(96px, 11.5vh); display: grid; justify-items: center; gap: 14px; padding: 0 var(--gutter); text-align: center; }
+.sheet__eyebrow { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--bp-ink); opacity: 0.85; }
+.sheet__title { font-size: clamp(56px, 9.6vw, 164px); line-height: 0.86; letter-spacing: -0.035em; font-weight: 600; white-space: nowrap; }
+.sheet--line .sheet__title { color: transparent; -webkit-text-stroke: 1.4px var(--bp-ink); }
+.sheet--fill .sheet__title { color: var(--paper-50); text-shadow: 0 3px 0 rgba(22, 9, 35, 0.25); }
+.sheet--fill .sheet__eyebrow { color: var(--lime-400); opacity: 1; }
+
+/* the drawing's title block (bottom right), like every real blueprint */
+.sheet__block { position: absolute; right: var(--gutter); bottom: var(--gutter); display: grid; grid-template-columns: 1fr 1fr; width: min(380px, 44vw); font-size: var(--t-small); }
+.sheet__block > div { padding: 10px 12px; border: 1.5px solid var(--bp-ink); margin: 0 -1.5px -1.5px 0; }
+.sheet__block .wide { grid-column: 1 / -1; }
+.sheet__block dt { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.sheet__block dd { margin-top: 4px; font-weight: var(--w-medium); }
+.sheet--line .sheet__block { color: var(--bp-ink); }
+.sheet--fill .sheet__block { color: var(--ink-900); background: var(--paper-50); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--lift-2); }
+.sheet--fill .sheet__block > div { border-color: rgba(22, 9, 35, 0.12); }
+
+/* drawing furniture: assembly axis, dimension line, sheet border with zone marks */
+.callouts .axis { stroke: #e4ecff; stroke-width: 1.2; stroke-dasharray: 10 6 2 6; opacity: 0.8; }
+.callouts .dim line { stroke: #e4ecff; stroke-width: 1.2; }
+.callouts .dim__t { fill: #e4ecff; font: 500 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: 0.16em; text-anchor: middle; }
+.frame { position: absolute; inset: 14px; border: 1.5px solid rgba(228, 236, 255, 0.7); pointer-events: none; opacity: calc(1 - var(--p, 0) * 22); }
+.frame::before { content: ''; position: absolute; inset: 22px; border: 1px solid rgba(228, 236, 255, 0.35); }
+.frame span { position: absolute; font: 500 10px ui-monospace, 'SF Mono', Menlo, monospace; color: rgba(228, 236, 255, 0.75); }
+.frame .t { top: 5px; } .frame .b { bottom: 5px; } .frame .l { left: 7px; } .frame .r { right: 7px; }
+
+/* callouts: leader lines from the pod to short labels about you */
+.callouts { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: calc(1 - var(--p, 0) * 22); }
+.callouts polyline { fill: none; stroke: var(--bp-ink, #e4ecff); stroke: #e4ecff; stroke-width: 1.4; }
+.callouts circle { fill: #7bf583; stroke: #160923; stroke-width: 1.5; }
+.callout-labels { position: absolute; inset: 0; pointer-events: none; opacity: calc(1 - var(--p, 0) * 22); }
+.callout { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 10px; translate: 8px -50%; color: #e4ecff; white-space: nowrap; }
+.callout--left { flex-direction: row-reverse; translate: calc(-100% - 8px) -50%; text-align: right; }
+.callout b { display: grid; place-items: center; width: 26px; height: 26px; border: 1.4px solid currentColor; border-radius: 50%; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; font-weight: 500; }
+.callout span { display: grid; gap: 2px; font-size: var(--t-small); opacity: 0.85; }
+.callout strong { font-size: 17px; font-weight: var(--w-medium); opacity: 1; color: #fff; letter-spacing: -0.01em; }
+
+.launch__foot { position: absolute; left: var(--gutter); bottom: var(--gutter); display: grid; justify-items: start; gap: 14px; opacity: calc(1 - var(--p, 0) * 22); }
+.launch__scroll { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 10px; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #e4ecff; }
+.launch__scroll i { width: 22px; height: 1px; background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px); }
+
+@media (max-width: 760px) {
+  .sheet__title { font-size: 15vw; white-space: normal; }
+  .sheet__block { left: var(--gutter); width: auto; bottom: 64px; }
+  .callout span { display: none; }
+  .launch__foot { right: var(--gutter); }
+}
+
+/* ===== the stepped story (reference pacing) ================================= */
+.sbeats { position: absolute; inset: 0; pointer-events: none; }
+/* the lime ring: draws itself around the pod, the dashed outer ring turns slowly */
+.sring { position: absolute; left: var(--rx, 50%); top: var(--ry, 50%); width: calc(var(--rr, 120px) * 3.3); height: auto; translate: -50% -50%; overflow: visible; }
+.sring__solid { fill: none; stroke: var(--lime-400); stroke-width: 1.6; stroke-dasharray: 1; stroke-dashoffset: 1; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset 1.1s var(--ease-in-out); }
+.sring__dash { fill: none; stroke: rgba(246, 232, 255, 0.4); stroke-width: 1; stroke-dasharray: 2 6; transform-origin: center; animation: spin 70s linear infinite; opacity: 0; transition: opacity 0.6s; }
+.sring.on .sring__solid { stroke-dashoffset: 0; }
+.sring.on .sring__dash { opacity: 1; }
+/* words brighten one after another when a beat settles, and dim together when it leaves */
+.sbeat .w { display: inline-block; opacity: 0; transform: translateY(6px); filter: blur(3px); transition: opacity 0.35s, transform 0.35s, filter 0.35s; }
+.sbeat.on .w { opacity: 1; transform: none; filter: none; transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), filter 0.6s var(--ease-out); transition-delay: calc(var(--i) * 55ms + 120ms); }
+.sbeat__eyebrow { opacity: 0; transition: opacity 0.4s; }
+.sbeat.on .sbeat__eyebrow { opacity: 1; transition-delay: 60ms; }
+.sbeat { position: absolute; inset: 0; color: var(--paper-50); }
+.sbeat--orbit p { position: absolute; top: var(--ry, 50%); translate: 0 -50%; max-width: 300px; font-size: clamp(20px, 1.9vw, 28px); line-height: 1.12; letter-spacing: -0.015em; font-weight: var(--w-medium); }
+.sbeat__l { right: calc(100% - var(--rx, 50%) + var(--rr, 120px) * 1.75); text-align: right; }
+.sbeat__r { left: calc(var(--rx, 50%) + var(--rr, 120px) * 1.75); }
+.sbeat__card { position: absolute; top: 50%; translate: 0 -50%; width: min(440px, 38vw); }
+.sbeat--left .sbeat__card { left: max(var(--gutter), 9vw); }
+.sbeat--right .sbeat__card { right: max(var(--gutter), 9vw); }
+.sbeat__eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-small); font-weight: var(--w-medium); color: var(--lilac-200); }
+.sbeat__eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--lime-400); box-shadow: 0 0 0 4px rgba(123, 245, 131, 0.22); }
+.sbeat__title { margin-top: 12px; font-size: clamp(30px, 3.4vw, 54px); line-height: 0.98; letter-spacing: -0.03em; font-weight: var(--w-medium); }
+.sbeat__body { margin-top: 14px; font-size: var(--t-body); line-height: 1.45; color: var(--lilac-100); }
+@media (max-width: 760px) {
+  .sbeat--orbit p { top: auto; left: var(--gutter); right: var(--gutter); max-width: none; text-align: center; translate: none; font-size: 20px; }
+  .sbeat__l { bottom: 22vh; } .sbeat__r { bottom: 12vh; }
+  .sbeat__card { left: var(--gutter) !important; right: var(--gutter) !important; width: auto; top: auto; bottom: 9vh; translate: none; }
+}
+
+/* facts pinned to rocks during the flight */
+.signs { position: absolute; inset: 0; pointer-events: none; }
+.sign { position: absolute; display: flex; flex-direction: column; align-items: flex-start; transform: translate(-1px, -100%); }
+.sign[data-side='r'] { align-items: flex-end; transform: translate(calc(-100% + 1px), -100%); }
+.sign__card {
+  max-width: 300px; padding: 14px 16px; border-radius: var(--r-lg); background: rgba(251, 251, 251, 0.94); color: var(--ink-900);
+  box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.15); opacity: 0; transform: translateY(10px) scale(0.96);
+  transition: opacity var(--d-base) var(--ease-out), transform var(--d-base) var(--ease-spring);
+}
+.sign.on .sign__card { opacity: 1; transform: none; }
+.sign__card .eyebrow { color: var(--violet-500); font-size: var(--t-micro); }
+.sign__title { margin-top: 4px; font-size: var(--t-h3); line-height: 1.1; letter-spacing: -0.01em; font-weight: var(--w-medium); }
+.sign__body { margin-top: 6px; font-size: var(--t-small); line-height: 1.4; color: var(--ink-700); }
+.sign__leader { width: 1px; height: 0; margin: 0 0 0 0; background: repeating-linear-gradient(var(--paper-50) 0 4px, transparent 4px 7px); transition: height var(--d-base) var(--ease-out); }
+.sign.on .sign__leader { height: 56px; }
+
+.launch__hint { display: none; }
+.launch__hint i { width: 1px; height: 30px; background: repeating-linear-gradient(currentColor 0 4px, transparent 4px 7px); animation: hint 2s var(--ease-in-out) infinite; transform-origin: top; }
+@keyframes hint { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* the cockpit, revealed after the dive (JS drives opacity + scale) */
+.launch__cockpit { position: absolute; inset: 0; opacity: 0; pointer-events: none; overflow: hidden; transform-origin: 50% 40%; will-change: transform; }
+/* the end of the cockpit: you fly out through the centre window into the night the footer starts with */
+.launch__out { position: absolute; inset: 0; z-index: 8; pointer-events: none; opacity: 0; background: #22102f; }
+.launch__cockpit.is-live { pointer-events: auto; }
+.launch__cockpit:not(.is-live) .window__copy, .launch__cockpit:not(.is-live) .cockpit__cursor { opacity: 0 !important; }
+.window__glass .btn { pointer-events: auto; }
+
+@media (max-width: 860px) {
+  .launch { height: 1000vh; }
+  .sign__card { max-width: 220px; }
+  .planet-card { left: var(--gutter) !important; right: var(--gutter); width: auto; top: auto !important; bottom: 80px; }
+  .console { grid-template-columns: 1fr; } .console__panel:not(:nth-child(2)) { display: none; }
+}

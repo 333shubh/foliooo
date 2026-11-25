@@ -1,0 +1,98 @@
+/* ==========================================================================
+   ORBIT design system · tokens
+   Cel-shaded cartoon sci-fi. Violet ink, pastel skies, paper UI, lime signal.
+   Every colour here is mirrored in src/ds/toon/palette.js for the 3D side.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap');
+
+:root {
+  /* ---- Ink: outlines, dark UI, body text on paper ---------------------- */
+  --ink-900: #160923;   /* the line colour; primary button; text on paper */
+  --ink-800: #22102f;
+  --ink-700: #2f1547;   /* console panels */
+  --ink-600: #3d1b5c;
+
+  /* ---- Violet: the space world + brand ---------------------------------- */
+  --violet-700: #4a1f6e;
+  --violet-600: #5b2785;
+  --violet-500: #6d2d93;   /* brand */
+  --violet-400: #8a47b8;
+  --violet-300: #a368d4;
+
+  /* ---- Lilac: cockpit, pod, highlights ---------------------------------- */
+  --lilac-500: #c27ff0;
+  --lilac-400: #d28eff;   /* accent */
+  --lilac-300: #e2b0ff;   /* cockpit wall */
+  --lilac-200: #efcdff;
+  --lilac-100: #f6e8ff;   /* text on violet */
+
+  /* ---- Paper: cards, buttons, help panels ------------------------------- */
+  --paper-0:   #ffffff;
+  --paper-50:  #fbfbfb;   /* card */
+  --paper-100: #eeede7;   /* help card, warm */
+  --paper-200: #d4d2c8;
+  --stone-500: #787771;   /* muted text on paper */
+
+  /* ---- Signal ----------------------------------------------------------- */
+  --lime-400: #7bf583;    /* gem, active dot, "found" */
+  --lime-200: #c9ffb0;
+  --rust-600: #b83b0e;    /* warnings, earth shade */
+  --sky-400:  #4f8df5;
+
+  /* ---- World skies (CSS mirrors of the 3D gradients) -------------------- */
+  --sky-space: linear-gradient(180deg, #2a0f44 0%, #5b2785 55%, #8a47b8 100%);
+  --sky-water: linear-gradient(180deg, #f3b8ff 0%, #b9a6f7 45%, #8aa2f2 100%);
+  --sky-earth: linear-gradient(180deg, #3f7ff0 0%, #7fb2ff 55%, #c4d9ff 100%);
+  --sky-dusk:  linear-gradient(180deg, #3b2ad1 0%, #6f4bea 55%, #c38df0 100%);
+
+  /* ---- Semantic --------------------------------------------------------- */
+  --bg: var(--violet-600);
+  --fg: var(--paper-50);
+  --fg-muted: rgba(246, 232, 255, 0.62);
+  --line: var(--ink-900);
+  --focus: var(--lime-400);
+
+  /* ---- Type ------------------------------------------------------------- */
+  --font: 'Inter Tight', 'Haffer', ui-sans-serif, system-ui, sans-serif;
+  /* size / line-height / tracking: taken from the reference's computed styles */
+  --t-display: clamp(52px, 6.5vw, 96px);  --lh-display: 0.78; --tr-display: -0.01em;
+  --t-h1: clamp(40px, 4.4vw, 64px);       --lh-h1: 0.92;      --tr-h1: -0.02em;
+  --t-h2: 32px;   --lh-h2: 0.95;  --tr-h2: -0.03em;
+  --t-h3: 22px;   --lh-h3: 1.1;   --tr-h3: -0.01em;
+  --t-body: 16px; --lh-body: 1.4; --tr-body: 0;
+  --t-ui: 15px;   --lh-ui: 1;     --tr-ui: -0.02em;
+  --t-small: 14px;--lh-small: 1.15;
+  --t-micro: 12px;--lh-micro: 1.3;
+  --w-regular: 400; --w-medium: 500; --w-semi: 600;
+
+  /* ---- Space (4px grid) ------------------------------------------------- */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+  --gutter: 24px;   /* page edge, matches the reference header inset */
+
+  /* ---- Shape ------------------------------------------------------------ */
+  --r-xs: 4px; --r-sm: 6px; --r-md: 10px; --r-lg: 12px;
+  --r-xl: 18px; --r-2xl: 30px; --r-window: 72px; --r-pill: 999px;
+  --stroke: 1px;          /* every drawn line is a hairline in ink */
+  --stroke-dash: 4px 3px;
+
+  /* ---- Toon (3D) — documented here, consumed by palette.js -------------- */
+  --toon-bands: 3;            /* shade / base / light */
+  --toon-line-px: 1;          /* post-process ink width */
+  --grain: 0.11;              /* film grain strength over everything */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);       /* UI arrives */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* camera moves */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);/* buttons, chips: cartoon overshoot */
+  --d-fast: 180ms; --d-base: 420ms; --d-slow: 900ms; --d-scene: 1800ms;
+
+  /* ---- Elevation: flat world, so shadows are hard offsets, never blurs -- */
+  --lift-1: 0 2px 0 0 rgba(22, 9, 35, 0.18);
+  --lift-2: 0 6px 0 -1px rgba(22, 9, 35, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; --d-scene: 0ms; }
+}

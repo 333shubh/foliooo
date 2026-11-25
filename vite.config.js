@@ -6,7 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        reveals: resolve(__dirname, 'reveals.html'),
+        designSystem: resolve(__dirname, 'design-system.html'),
       },
     },
   },

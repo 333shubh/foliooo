@@ -6,11 +6,18 @@ import { WORLDS } from './toon/worlds.js';
    Markup: .cockpit > .cockpit__track > .window[data-world]  (+ optional dots)
    - 9 slots around the drum = 3 copies of the windows → it never runs out.
      Only the originals render WebGL; copies mirror their pixels (2D canvas).
-   - Glides to the next window on its own every few seconds; hover/drag/
-     focus pauses it. Drag, arrow keys, dots or the side arrow cursor move it.
+   - With { auto: ms } it glides to the next window on its own, looping forever
+     (a calm 1.4s ease-in-out). It holds while the cursor is on a window's
+     button or the wall has focus; dragging, swiping, keys or clicks restart its
+     wait. setAuto(false) parks it (e.g. while it's off screen).
+     Drag, a sideways wheel/trackpad swipe, arrow keys, dots or the side arrow
+     cursor move it.
+     Timings are the reference's: button moves 1000ms easeOutCubic, the snap
+     after a drag or swipe 750ms easeOutCubic.
+   - arrive() plays the entrance drift (the wall slides into place, 2.5s).
    - The whole wall leans a little toward the mouse (parallax).
    ========================================================================== */
-export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
+export function mountCockpit(cockpit, { dots, start = 0, auto = 0 } = {}) {
   const track = cockpit.querySelector('.cockpit__track');
   track.classList.add('cockpit__drum');
   const originals = [...track.querySelectorAll('.window')];
@@ -71,26 +78,36 @@ export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
     cockpit.style.setProperty('--persp', `${Math.max(1000, R * 1.05)}px`);   // stronger curve, like the reference
   };
 
-  let angle = start * STEP, target = angle, vel = 0, current = -1, hold = false, held = false;
-  // glides are fixed-length eased tweens (in, glide, out) rather than springs: that's the reference's pacing
-  const tw = { from: angle, to: angle, t0: 0, dur: 1.15 };
+  let angle = start * STEP, vel = 0, current = -1, wheelAt = 0;
+  // every move is a fixed-length eased tween (the reference's pacing), never a spring
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  const tweenTo = (a) => { tw.from = angle; tw.to = a; tw.t0 = performance.now(); target = a; };
-  let dragX = null, dragOff = 0, lastX = 0, idleSince = performance.now();
+  const tw = { from: angle, to: angle, t0: 0, dur: 1, ease: easeOut };
+  let idleSince = performance.now(), autoOn = true, hover = false, focused = false;
+  const tweenTo = (a, dur = 1, delay = 0, ease = easeOut) => { tw.from = angle; tw.to = a; tw.t0 = performance.now() + delay; tw.dur = dur; tw.ease = ease; idleSince = tw.t0 + dur * 1000; };
+  const hold = (a) => { angle = tw.from = tw.to = a; tw.t0 = 0; };
+  let dragX = null, dragOff = 0, lastX = 0;
   const px = { x: 0, y: 0 }, pxS = { x: 0, y: 0 };
   const go = (i) => {
     // shortest way round to the nearest slot showing window i
     const cur = Math.round(angle / STEP);
     let best = null;
     for (let k = cur - SLOTS; k <= cur + SLOTS; k++) if (((k % N) + N) % N === ((i % N) + N) % N && (best === null || Math.abs(k - cur) < Math.abs(best - cur))) best = k;
-    tweenTo(best * STEP); idleSince = performance.now();
+    tweenTo(best * STEP, 1);
   };
-  const step = (d) => { tweenTo((Math.round(tw.to / STEP) + d) * STEP); idleSince = performance.now(); };
+  const step = (d) => tweenTo((Math.round(tw.to / STEP) + d) * STEP, 1);
 
-  cockpit.addEventListener('pointerenter', () => { hold = true; });
-  cockpit.addEventListener('pointerleave', () => { hold = false; cursor.classList.remove('on'); px.x = px.y = 0; });
-  cockpit.addEventListener('focusin', () => { hold = true; });
-  cockpit.addEventListener('focusout', () => { hold = false; });
+  cockpit.addEventListener('pointerover', (e) => { hover = !!e.target.closest('a, button'); });
+  cockpit.addEventListener('pointerleave', () => { hover = false; cursor.classList.remove('on'); px.x = px.y = 0; });
+  cockpit.addEventListener('focusin', () => { focused = true; });
+  cockpit.addEventListener('focusout', () => { focused = false; idleSince = performance.now(); });
+  // a sideways wheel / trackpad swipe scrolls the wall freely, then it snaps (vertical scroll stays the page's)
+  cockpit.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || !cockpit.classList.contains('is-live')) return;
+    e.preventDefault();
+    hold(angle + e.deltaX * (STEP / (cockpit.clientWidth * 0.5)));
+    wheelAt = performance.now();
+  }, { passive: false });
   cockpit.addEventListener('pointermove', (e) => {
     const r = cockpit.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
     px.x = fx * 2 - 1; px.y = fy * 2 - 1;
@@ -103,7 +120,7 @@ export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
     if (dragX === null) return;
     const dx = e.clientX - lastX; lastX = e.clientX; dragOff += dx;
     const perPx = STEP / (cockpit.clientWidth * 0.5);
-    angle -= dx * perPx; target = angle; tw.to = angle; vel = -dx * perPx * 60;
+    hold(angle - dx * perPx); vel = -dx * perPx * 60;
   });
   cockpit.addEventListener('pointerdown', (e) => {
     if (e.target.closest('a,button')) return;
@@ -118,7 +135,7 @@ export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
       if (fx < 0.3) step(-1); else if (fx > 0.7) step(1);
       return;
     }
-    tweenTo(Math.round((angle + vel * 0.25) / STEP) * STEP); vel = 0; idleSince = performance.now();
+    tweenTo(Math.round((angle + vel * 0.25) / STEP) * STEP, 0.75); vel = 0;
   };
   cockpit.addEventListener('pointerup', endDrag);
   cockpit.addEventListener('pointercancel', endDrag);
@@ -129,15 +146,16 @@ export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
   });
   addEventListener('resize', layout);
 
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let last = performance.now();
   function frame(now) {
     requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (cockpit.offsetParent === null) return;
-    // the slow automatic glide to the next world
-    if (!hold && !held && !reduced && dragX === null && now - idleSince > dwell) step(1);
-    if (dragX === null) { const k = Math.min(1, (now - tw.t0) / 1000 / tw.dur); angle = tw.from + (tw.to - tw.from) * easeInOut(k); }
+    if (wheelAt && now - wheelAt > 120) { wheelAt = 0; tweenTo(Math.round(angle / STEP) * STEP, 0.75); }
+    // the loop: glide on to the next window after a rest, unless you're looking or touching
+    if (auto && autoOn && !hover && !focused && dragX === null && !wheelAt && now - idleSince > auto) tweenTo((Math.round(tw.to / STEP) + 1) * STEP, 1.4, 0, easeInOut);
+    if (dragX !== null || wheelAt) idleSince = now;
+    if (dragX === null && !wheelAt) { const k = Math.min(1, Math.max(0, (now - tw.t0) / 1000 / tw.dur)); angle = tw.from + (tw.to - tw.from) * tw.ease(k); }
     pxS.x += (px.x - pxS.x) * (1 - Math.exp(-dt * 4)); pxS.y += (px.y - pxS.y) * (1 - Math.exp(-dt * 4));
     track.style.transform = `translateZ(var(--R)) rotateX(${pxS.y * 2.2}deg) rotateY(${-angle + pxS.x * -3.5}deg)`;
     cockpit.style.setProperty('--lean-x', pxS.x.toFixed(3)); cockpit.style.setProperty('--lean-y', pxS.y.toFixed(3));
@@ -154,7 +172,9 @@ export function mountCockpit(cockpit, { dots, start = 0, dwell = 5500 } = {}) {
   requestAnimationFrame(frame);
   return {
     go, stages,
-    jump: (i) => { angle = target = tw.from = tw.to = i * STEP; tw.t0 = 0; vel = 0; idleSince = performance.now(); },
-    hold: (on) => { if (on || held) idleSince = performance.now(); held = on; },   // the drift restarts its wait on release
+    jump: (i) => { hold(i * STEP); vel = 0; },
+    setAuto: (on) => { if (on && !autoOn) idleSince = performance.now(); autoOn = on; },
+    // the entrance: the wall slides in from half a window away (reference: camera x -5 → 0, 2.5s easeOutCubic, after 1s)
+    arrive: (delay = 1000) => { const to = Math.round(angle / STEP) * STEP; hold(to - STEP * 0.5); tweenTo(to, 2.5, delay); },
   };
 }

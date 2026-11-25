@@ -94,9 +94,6 @@ code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; 
 /* worlds / cockpit */
 .ds-worlds { padding-top: var(--s-10); background: linear-gradient(180deg, var(--violet-600), var(--lilac-300) 380px); }
 .ds-worlds .ds-head { color: var(--paper-50); }
-.cockpit { cursor: grab; user-select: none; touch-action: pan-y; }
-.cockpit.is-dragging { cursor: grabbing; }
-.cockpit.is-dragging .cockpit__track { transition: none; }
 
 /* motion */
 .ds-motion { display: grid; gap: var(--s-3); }

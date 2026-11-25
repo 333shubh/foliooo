@@ -16,16 +16,15 @@ export const setLight = (v) => LIGHT.value.set(...v).normalize();
    flat: 1 = faceted (rocks, crystals), 0 = smooth (hills, pod, clouds).
    rim:  0..0.5 — width of the light band around the silhouette.
    ------------------------------------------------------------------------ */
-// pattern: 0 none · 1 vertical stripes · 2 diamonds · 3 polka dots · 4 horizontal stripes.
-// Patterns are world-space, so wallpaper tiles cleanly across any wall without UVs.
-export function toon(tone = 'violet', { flat = 0, rim = 0, t1 = -0.05, t2 = 0.55, side = THREE.FrontSide, pattern = 0, patScale = 1, patColor = null, patAmt = 1 } = {}) {
+// vertexColors: true → each vertex carries its own base colour (one mesh, many terrains);
+// shade and light tones are derived from it so the three-band look still holds.
+export function toon(tone = 'violet', { flat = 0, rim = 0, t1 = -0.05, t2 = 0.55, side = THREE.FrontSide, vertexColors = false } = {}) {
   const t = typeof tone === 'string' ? tones[tone] : tone;
   const m = new THREE.ShaderMaterial({
-    side, fog: true,
+    side, fog: true, vertexColors,
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, {
       uShade: { value: C(t.shade) }, uBase: { value: C(t.base) }, uLight: { value: C(t.light) },
       uT1: { value: t1 }, uT2: { value: t2 }, uFlat: { value: flat }, uRim: { value: rim },
-      uPat: { value: pattern }, uPatScale: { value: patScale }, uPatAmt: { value: patAmt }, uPatColor: { value: C(patColor || t.light) },
     }]),
     vertexShader: TOON_VS,
     fragmentShader: TOON_FS,
@@ -38,6 +37,9 @@ const TOON_VS = /* glsl */ `
   #include <common>
   #include <fog_pars_vertex>
   varying vec3 vN; varying vec3 vW;
+  #ifdef USE_COLOR
+    varying vec3 vC;
+  #endif
   void main() {
     #ifdef USE_INSTANCING
       vec4 w = modelMatrix * instanceMatrix * vec4(position, 1.0);
@@ -45,6 +47,9 @@ const TOON_VS = /* glsl */ `
     #else
       vec4 w = modelMatrix * vec4(position, 1.0);
       vN = normalize(mat3(modelMatrix) * normal);
+    #endif
+    #ifdef USE_COLOR
+      vC = color;
     #endif
     vW = w.xyz;
     vec4 mvPosition = viewMatrix * w;
@@ -56,30 +61,28 @@ const TOON_FS = /* glsl */ `
   #include <common>
   #include <fog_pars_fragment>
   uniform vec3 uShade, uBase, uLight, uLightDir;
-  uniform float uT1, uT2, uFlat, uRim, uPat, uPatScale, uPatAmt;
-  uniform vec3 uPatColor;
+  uniform float uT1, uT2, uFlat, uRim;
   varying vec3 vN; varying vec3 vW;
-  float patMask(vec3 w, vec3 n) {
-    vec2 p = (abs(n.x) > abs(n.z) ? w.zy : w.xy) / uPatScale;   // walls: run along the wall
-    if (abs(n.y) > 0.7) p = w.xz / uPatScale;                     // floors and tops
-    if (uPat < 1.5) return step(0.5, fract(p.x));
-    if (uPat < 2.5) { vec2 q = abs(fract(vec2(p.x + p.y, p.x - p.y) * 0.5) - 0.5); return step(q.x + q.y, 0.2); }
-    if (uPat < 3.5) { vec2 g = fract(p + vec2(step(0.5, fract(p.y * 0.5)) * 0.5, 0.0)) - 0.5; return step(length(g), 0.2); }
-    return step(0.5, fract(p.y));
-  }
+  #ifdef USE_COLOR
+    varying vec3 vC;
+  #endif
   void main() {
+    #ifdef USE_COLOR
+      vec3 base = vC, shade = vC * vec3(0.6, 0.55, 0.74), lite = min(vC * 1.16 + vec3(0.05, 0.04, 0.07), vec3(1.0));
+    #else
+      vec3 base = uBase, shade = uShade, lite = uLight;
+    #endif
     vec3 fn = normalize(cross(dFdx(vW), dFdy(vW)));
     vec3 n = normalize(mix(normalize(vN), fn, uFlat));
     float d = dot(n, uLightDir);
     float aa = fwidth(d) + 0.002;
-    vec3 c = mix(uShade, uBase, smoothstep(uT1 - aa, uT1 + aa, d));
-    c = mix(c, uLight, smoothstep(uT2 - aa, uT2 + aa, d));
+    vec3 c = mix(shade, base, smoothstep(uT1 - aa, uT1 + aa, d));
+    c = mix(c, lite, smoothstep(uT2 - aa, uT2 + aa, d));
     if (uRim > 0.0) {
       float r = 1.0 - max(dot(n, normalize(cameraPosition - vW)), 0.0);
       float ra = fwidth(r) + 0.002;
-      c = mix(c, uLight, smoothstep(1.0 - uRim - ra, 1.0 - uRim + ra, r) * 0.8);
+      c = mix(c, lite, smoothstep(1.0 - uRim - ra, 1.0 - uRim + ra, r) * 0.8);
     }
-    if (uPat > 0.5) c = mix(c, mix(c, uPatColor, 0.5), patMask(vW, n) * uPatAmt);
     gl_FragColor = vec4(c, 1.0);
     #include <fog_fragment>
   }`;

@@ -46,7 +46,7 @@ export function space({ pod = true, constellation = true } = {}) {
   const w = base('space'), { scene } = w, r = rng(11);
 
   const planet = makePlanet({ radius: 34 });
-  planet.position.set(-26, -40, -14); scene.add(planet);
+  planet.position.set(-26, -40, -14); scene.add(planet); w.edge = planet;
   w.tick.push((dt) => { planet.rotation.y += dt * 0.01; });
 
   // asteroids in a loose shell, keeping the middle clear for type
@@ -174,11 +174,3 @@ export function props() {
 
 export const WORLDS = { space, water, earth, props, dusk: (o) => water({ ...o, night: true }), desert: (o) => earth({ ...o, desert: true }) };
 
-// Work categories → worlds (the cockpit windows, the Work page filters, case-study skies)
-export const CATEGORY_WORLDS = {
-  development: { world: 'earth', title: 'Development', line: 'Things that run on solid ground' },
-  uiux: { world: 'water', title: 'UI/UX Design', line: 'Interfaces that flow' },
-  graphic: { world: 'desert', title: 'Graphic Design', line: 'Bold shapes in hard light' },
-  branding: { world: 'space', title: 'Branding', line: 'Identities built to launch' },
-  research: { world: 'dusk', title: 'Research', line: 'Finding the stars between the data' },
-};

@@ -1,10 +1,128 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-entering">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shubh Jadiya: rebuilding in orbit</title>
-    <meta http-equiv="refresh" content="0; url=/design-system.html" />
+    <title>Shubh Jadiya: Developer &amp; Designer</title>
+    <meta name="description" content="Shubh Jadiya, developer and designer turning interesting ideas into things you can actually use." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#2a0f44" />
+    <link rel="stylesheet" href="/src/ds/tokens.css" />
+    <link rel="stylesheet" href="/src/ds/components.css" />
+    <link rel="stylesheet" href="/src/ds/patterns.css" />
+    <link rel="stylesheet" href="/src/home/home.css" />
   </head>
-  <body><a href="/design-system.html">Orbit design system</a></body>
+  <body class="home">
+    <a class="skip" href="/work.html">Skip to work</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Shubh Jadiya, home">
+        <svg class="brand__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(-24 12 12)" stroke-width="1.5"/></svg>
+        Shubh Jadiya
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="/about.html">About</a>
+        <a class="link" href="/work.html">Work</a>
+        <a class="btn btn--paper" href="/contact.html"><span class="btn__label">Say hello</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- One sticky stage: home planet → launch → flight through the belt → into the pod window → cockpit -->
+      <section class="launch" id="top" aria-label="Introduction">
+        <div class="launch__sticky" id="launch">
+          <div class="launch__view" id="view">
+            <canvas id="gl" aria-hidden="true"></canvas>
+            <div class="ds-tags launch__tags" id="tags"></div>
+
+            <!-- the hero is one blueprint sheet. Two identical layers: drawn (outline) and shipped (filled, inside the portal) -->
+            <div class="sheet sheet--line" aria-hidden="false">
+              <div class="sheet__name">
+                <p class="sheet__eyebrow">Drawing no. 001 · Developer &amp; designer</p>
+                <h1 class="sheet__title"><span class="sr-only">Shubh Jadiya, developer and designer. </span>Shubh Jadiya</h1>
+              </div>
+              <dl class="sheet__block">
+                <div><dt>Name</dt><dd>Shubh Jadiya</dd></div>
+                <div><dt>Role</dt><dd>Developer &amp; designer</dd></div>
+                <div><dt>Based in</dt><dd>[ your city ]</dd></div>
+                <div><dt>Now</dt><dd>[ what you’re doing ]</dd></div>
+                <div class="wide"><dt>Sheet</dt><dd>01 / 01 · Rev. 2026</dd></div>
+              </dl>
+            </div>
+            <div class="sheet sheet--fill" aria-hidden="true">
+              <div class="sheet__name">
+                <p class="sheet__eyebrow">Drawing no. 001 · Developer &amp; designer</p>
+                <h1 class="sheet__title">Shubh Jadiya</h1>
+              </div>
+              <dl class="sheet__block">
+                <div><dt>Name</dt><dd>Shubh Jadiya</dd></div>
+                <div><dt>Role</dt><dd>Developer &amp; designer</dd></div>
+                <div><dt>Based in</dt><dd>[ your city ]</dd></div>
+                <div><dt>Now</dt><dd>[ what you’re doing ]</dd></div>
+                <div class="wide"><dt>Sheet</dt><dd>01 / 01 · Rev. 2026</dd></div>
+              </dl>
+            </div>
+            <div class="frame" aria-hidden="true"><span class="t" style="left:8.333333333333332%">1</span><span class="b" style="left:8.333333333333332%">1</span><span class="t" style="left:25%">2</span><span class="b" style="left:25%">2</span><span class="t" style="left:41.66666666666667%">3</span><span class="b" style="left:41.66666666666667%">3</span><span class="t" style="left:58.333333333333336%">4</span><span class="b" style="left:58.333333333333336%">4</span><span class="t" style="left:75%">5</span><span class="b" style="left:75%">5</span><span class="t" style="left:91.66666666666666%">6</span><span class="b" style="left:91.66666666666666%">6</span><span class="l" style="top:12.5%">A</span><span class="r" style="top:12.5%">A</span><span class="l" style="top:37.5%">B</span><span class="r" style="top:37.5%">B</span><span class="l" style="top:62.5%">C</span><span class="r" style="top:62.5%">C</span><span class="l" style="top:87.5%">D</span><span class="r" style="top:87.5%">D</span></div>
+            <svg class="callouts" id="callouts" aria-hidden="true"></svg>
+            <div class="callout-labels" id="callout-labels" aria-hidden="true"></div>
+            <div class="scan" aria-hidden="true"></div>
+            <div class="launch__cta">
+              <button class="launch-btn" id="launch-btn" type="button"><span>Launch the pod</span><b aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b></button>
+              <p>or scroll<i></i>move your cursor to see it shipped<i></i>click to leave a portal open</p>
+            </div>
+          </div>
+
+          <!-- the cockpit: you are now inside the pod; each window is a door -->
+          <div class="launch__cockpit cockpit" id="cockpit" aria-label="Choose a page">
+            <div class="cockpit__track" id="track"></div>
+            <div class="console">
+              <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor" aria-hidden="true"><path d="M10 40 L290 30 M10 80 L290 75 M10 120 L290 118 M60 20 L50 140 M130 20 L125 140 M200 20 L200 140 M260 20 L265 140"/></svg></div></div>
+              <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 400 140" fill="none" stroke="currentColor" aria-hidden="true"><path d="M140 40 h-20 v20 M260 40 h20 v20 M200 30 V140 M120 140 A 80 60 0 0 1 280 140"/></svg><div class="console__center"><span>Swipe to explore the worlds</span><div class="dots" id="dots"></div></div><span class="console__planet"></span></div></div>
+              <div class="console__panel"><div class="console__screen"><svg viewBox="0 0 300 140" fill="none" stroke="currentColor" aria-hidden="true"><circle cx="230" cy="140" r="90"/><circle cx="230" cy="140" r="50" stroke-dasharray="3 4"/></svg></div></div>
+            </div>
+          </div>
+
+          <!-- the mission's controls, like the reference: skip, and one segment per beat -->
+          <div class="mission" id="mission">
+            <button class="mission__skip" id="skip" type="button">Skip</button>
+            <div class="mission__bar" id="bar" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="launch__cut" id="cut" aria-hidden="true"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="space-footer" aria-labelledby="footer-title">
+      <canvas id="footer-gl" aria-hidden="true"></canvas>
+      <div class="space-footer__head">
+        <p class="space-footer__kicker">End of transmission</p>
+        <h2 class="space-footer__title" id="footer-title">Got an idea?<br />Let’s build it.</h2>
+      </div>
+      <div class="space-footer__cards" id="footer-cards">
+        <article class="fcard" data-at="0">
+          <div class="fcard__card">
+            <p class="eyebrow">Say hello</p>
+            <p class="fcard__lead">Internships, freelance or a weird side project. I read everything.</p>
+            <a class="btn btn--sm" href="/contact.html"><span class="btn__label">Get in touch</span></a>
+          </div><span class="fcard__leader"></span>
+        </article>
+        <article class="fcard" data-at="1">
+          <div class="fcard__card">
+            <p class="eyebrow">Elsewhere</p>
+            <ul class="fcard__links"><li><a href="https://github.com/333shubh" target="_blank" rel="noopener">GitHub <span>@333shubh ↗</span></a></li><li><a aria-disabled="true">LinkedIn <span>[ add ]</span></a></li><li><a aria-disabled="true">Email <span>[ add ]</span></a></li></ul>
+          </div><span class="fcard__leader"></span>
+        </article>
+        <article class="fcard" data-at="2">
+          <div class="fcard__card">
+            <p class="eyebrow">Pages</p>
+            <ul class="fcard__links"><li><a href="/about.html">About <span>→</span></a></li><li><a href="/work.html">Work <span>→</span></a></li><li><a href="/contact.html">Contact <span>→</span></a></li></ul>
+          </div><span class="fcard__leader"></span>
+        </article>
+      </div>
+      <div class="space-footer__base"><span>© 2026 Shubh Jadiya</span><a class="link" href="/design-system.html">Design system</a><button class="link" type="button" data-top>Back to the top ↑</button></div>
+    </footer>
+
+    <script type="module" src="/src/home/home.js"></script>
+  </body>
 </html>

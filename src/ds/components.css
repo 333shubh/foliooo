@@ -153,47 +153,73 @@ body { transition: opacity 420ms var(--ease-out), filter 420ms var(--ease-out); 
 .orbit-ring .ring-dash { fill: none; stroke: var(--lilac-200); stroke-opacity: 0.45; stroke-width: 1; stroke-dasharray: 2 5; transform-origin: center; animation: spin 60s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---------- Cockpit: the project carousel ------------------------------- */
+/* ---------- Cockpit: windows on a curved wall (cockpit.js) ---------------
+   The track is a 3D drum; each .window sits on its inside at angle --a.
+   JS sets --W (window width), --R (drum radius) and --persp.            */
 .cockpit {
   --wall: var(--lilac-300); --rim: var(--lilac-200);
-  position: relative; overflow: hidden; background: var(--wall);
-  background-image: radial-gradient(120% 80% at 50% 0%, #f0c4ff 0%, transparent 60%), linear-gradient(180deg, var(--lilac-300), #d79cf6);
-  color: var(--paper-50);
+  position: relative; overflow: hidden; display: grid; grid-template-rows: 1fr auto; align-items: start;
+  min-height: 100vh; min-height: 100svh;
+  background: linear-gradient(180deg, #e4b0fb 0%, #dca5f7 55%, #d196f1 100%);
+  color: var(--paper-50); perspective: var(--persp, 1600px); perspective-origin: 50% 42%;
+  cursor: grab; user-select: none; -webkit-user-select: none; touch-action: pan-y;
 }
-.cockpit__track { display: flex; gap: 64px; padding: 64px 0 0; will-change: transform; transition: transform var(--d-slow) var(--ease-in-out); }
+.cockpit.is-dragging { cursor: grabbing; }
+.cockpit.has-arrow { cursor: none; }
+.cockpit__drum { position: relative; height: calc(var(--W, 760px) * 0.66 + 24px); margin-top: max(76px, 10vh); transform-style: preserve-3d; will-change: transform; }
 .window {
-  position: relative; flex: 0 0 auto; width: min(58vw, 800px); aspect-ratio: 16 / 10.5;
-  padding: 22px; border-radius: var(--r-window);
-  background: linear-gradient(180deg, #f3d2ff, var(--rim) 40%, #d9a2f8);
-  box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  position: absolute; left: 50%; top: 0; width: var(--W, 760px); aspect-ratio: 16 / 10.6; margin-left: calc(var(--W, 760px) / -2);
+  padding: calc(var(--W, 760px) * 0.028); border-radius: calc(var(--W, 760px) * 0.1);
+  background: linear-gradient(180deg, #f6dbff, var(--rim) 38%, #dca6fa);
+  box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 -10px 0 rgba(163, 104, 212, 0.25);
+  transform: rotateY(var(--a)) translateZ(calc(var(--R, 1100px) * -1));
+  backface-visibility: hidden;
 }
-.window::before { /* the second, outer bezel line */
-  content: ''; position: absolute; inset: -16px; border-radius: calc(var(--r-window) + 16px);
-  border: 1px solid rgba(22, 9, 35, 0.45); pointer-events: none;
+.window::before { /* the outer bezel line */
+  content: ''; position: absolute; inset: calc(var(--W, 760px) * -0.022); border-radius: calc(var(--W, 760px) * 0.122);
+  border: 1px solid rgba(22, 9, 35, 0.42); pointer-events: none;
+}
+.window::after { /* the wall's seam between windows */
+  content: ''; position: absolute; top: 4%; bottom: 4%; left: calc(100% + var(--W, 760px) * 0.04); width: 2px; border-radius: 2px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.7) 30%, rgba(255, 255, 255, 0.7) 70%, transparent); opacity: 0.6;
 }
 .window__glass {
   position: relative; height: 100%; overflow: hidden; isolation: isolate;
-  border-radius: calc(var(--r-window) - 18px); background: var(--sky-earth);
-  box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.6), inset 0 8px 0 rgba(255, 255, 255, 0.12);
+  border-radius: calc(var(--W, 760px) * 0.075); background: var(--sky-earth);
+  box-shadow: 0 0 0 1px rgba(22, 9, 35, 0.6), inset 0 6px 0 rgba(255, 255, 255, 0.1);
 }
 .window__glass > canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
-.window__glass::after { /* glass glare */
+.window__glass::after { /* glass sheen */
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.14) 18% 24%, transparent 24% 27%, rgba(255, 255, 255, 0.08) 27% 29%, transparent 29%);
+  background: linear-gradient(118deg, transparent 14%, rgba(255, 255, 255, 0.13) 14% 21%, transparent 21% 24%, rgba(255, 255, 255, 0.07) 24% 26%, transparent 26%);
 }
-.window__copy { position: absolute; inset: 0; display: grid; align-content: space-between; justify-items: center; padding: 9% 8% 7%; text-align: center; text-shadow: 0 1px 0 rgba(22, 9, 35, 0.35), 0 0 24px rgba(22, 9, 35, 0.25); }
-.cockpit:focus-visible { outline-offset: -6px; border-radius: 0; }
-.window__copy h3 { font-size: clamp(40px, 5vw, 72px); line-height: 0.9; letter-spacing: -0.02em; font-weight: var(--w-medium); }
-.window__copy p { margin-top: 14px; max-width: 26ch; font-size: var(--t-small); line-height: 1.3; opacity: 0.9; }
-.window:not([aria-current='true']) .window__copy { opacity: 0; transition: opacity var(--d-base); }
-.window[aria-current='true'] .window__copy { opacity: 1; transition: opacity var(--d-slow) var(--d-base); }
+.window__copy { position: absolute; inset: 0; display: grid; align-content: space-between; justify-items: center; padding: 10% 8% 8%; text-align: center; text-shadow: 0 1px 0 rgba(22, 9, 35, 0.3), 0 0 24px rgba(22, 9, 35, 0.2); }
+.window__copy h3 { font-size: clamp(36px, calc(var(--W, 760px) * 0.088), 76px); line-height: 0.9; letter-spacing: -0.02em; font-weight: var(--w-medium); }
+.window__copy p { margin-top: 14px; max-width: 26ch; font-size: clamp(13px, calc(var(--W, 760px) * 0.021), 16px); line-height: 1.35; opacity: 0.92; }
+.window .window__copy .btn { opacity: 0; transition: opacity var(--d-base); }                 /* titles show on every window (like the reference); */
+.window[aria-current='true'] .window__copy .btn { opacity: 1; transition: opacity var(--d-slow) var(--d-base); } /* only the centred one offers its button */
+.window[data-copy] canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
 
-.console { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 24px; margin-top: 56px; padding: 0 0 0; }
+/* the side arrow that follows the cursor (reference behaviour) */
+.cockpit__cursor { position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity var(--d-fast); }
+.cockpit__cursor.on { opacity: 1; }
+.cockpit__cursor b { position: absolute; left: -30px; top: -30px; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--paper-50); color: var(--ink-900); box-shadow: 0 6px 18px rgba(22, 9, 35, 0.18); transition: transform var(--d-base) var(--ease-spring); }
+.cockpit__cursor b svg { width: 20px; height: 20px; }
+.cockpit__cursor.next b { transform: rotate(180deg); }
+.cockpit__cursor i { position: absolute; left: -56px; top: -56px; width: 112px; height: 112px; border-radius: 50%; border: 1px dashed rgba(255, 255, 255, 0.85); animation: spin 14s linear infinite; }
+
+/* the dashboard under the windows: three screens, slightly tilted toward you */
+.console {
+  position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 1.6vw; align-items: end;
+  padding: 0; transform: translateX(calc(var(--lean-x, 0) * -10px));
+}
 .console__panel {
-  position: relative; height: 150px; padding: 14px; border-radius: 22px 22px 0 0;
-  background: var(--violet-600); box-shadow: inset 0 0 0 10px var(--violet-500), inset 0 0 0 11px rgba(22, 9, 35, 0.6);
+  position: relative; height: clamp(110px, 17vh, 170px); padding: 12px 12px 0; border-radius: 26px 26px 0 0;
+  background: linear-gradient(180deg, #7b3aa8, var(--violet-600)); box-shadow: inset 0 0 0 1px rgba(22, 9, 35, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.18);
   overflow: hidden;
 }
-.console__screen { position: absolute; inset: 11px 11px 0; border-radius: 14px 14px 0 0; background: var(--ink-700); }
-.console__screen svg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(246, 232, 255, 0.35); }
-.console__center { position: absolute; inset: 22px 0 auto; display: grid; justify-items: center; gap: 10px; color: var(--fg-muted); font-size: var(--t-small); }
+.console__screen { position: absolute; inset: 12px 12px 0; border-radius: 18px 18px 0 0; background: linear-gradient(180deg, #3a1758, var(--ink-700)); box-shadow: inset 0 0 0 1px rgba(22, 9, 35, 0.7); overflow: hidden; }
+.console__screen svg { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(246, 232, 255, 0.32); }
+.console__center { position: absolute; inset: 18px 0 auto; display: grid; justify-items: center; gap: 10px; color: var(--fg-muted); font-size: var(--t-small); }
+.console__planet { position: absolute; left: calc(44% + var(--lean-x, 0) * 18px); bottom: -9px; width: 20px; height: 20px; border-radius: 50%; background: var(--lime-400); box-shadow: 0 0 0 1px var(--ink-900), 0 0 16px rgba(123, 245, 131, 0.6); }
+@media (max-width: 700px) { .console { grid-template-columns: 1fr; } .console__panel:not(:nth-child(2)) { display: none; } }

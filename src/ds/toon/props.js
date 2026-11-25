@@ -184,3 +184,132 @@ export function makePlanet({ radius = 30, tone = 'planet', seed = 4 } = {}) {
   geo.computeVertexNormals();
   return mesh(geo, toon(tone, { t1: 0.35, t2: 0.82, rim: 0.05 }));
 }
+
+/* ---------- Home planet: every terrain on one little globe -------------
+   Lilac ocean, green hills with trees, red desert + mesas, violet mountains
+   with crystals, a snowy south pole, and a flat launch pad on the north pole
+   (the spin axis, so the pad stays put while the planet turns).
+   Returns { root, spin, padTop } — rotate `spin` around its y axis.        */
+const BIOME = {
+  grass: new THREE.Color('#78c65e'), forest: new THREE.Color('#4fae5a'), beach: new THREE.Color('#f2cf9a'),
+  sand: new THREE.Color('#e48a5a'), mesa: new THREE.Color('#b94f38'), rock: new THREE.Color('#8a68c0'),
+  snow: new THREE.Color('#f4ecff'), pad: new THREE.Color('#9fd98a'),
+};
+export function makeHomePlanet({ radius: R = 6, seed = 3, sites = [], freq = 1, detail = 38, poleCos = 0.86, padCos = 0.955, capCos = -1, trees = 46, weather = true, relief = 1, treeRate = 1, lot = 0.2 } = {}) {
+  // big-planet mode: raise freq + detail, shrink poleCos/padCos to the pad, set capCos to the visible cap
+  // sites: [{ obj, dir: Vector3, scale }]: landmarks; the land under each is kept dry and gentle
+  const root = new THREE.Group(), spin = new THREE.Group(); root.add(spin);
+  const off = seed * 7.3, sky_ = weather;
+  // tri-planar fbm: noise on three planes, so continents don't streak along an axis
+  const fbm3 = (d, f, o = 0) => { f *= freq; return (fbm(d.x * f + o, d.y * f - o, 4) + fbm(d.y * f + 5 + o, d.z * f, 4) + fbm(d.z * f - 9, d.x * f + o, 4)) / 3; };
+
+  let geo = new THREE.IcosahedronGeometry(R, detail);
+  geo.deleteAttribute('normal'); geo.deleteAttribute('uv'); geo = mergeVertices(geo);
+  const p = geo.attributes.position, n = p.count, d = new THREE.Vector3();
+  const H = new Float32Array(n), DRY = new Float32Array(n), WOOD = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    d.fromBufferAttribute(p, i).normalize();
+    H[i] = fbm3(d, 1.5, off); DRY[i] = fbm3(d, 1.7, off + 11); WOOD[i] = fbm3(d, 2.6, off + 3);
+  }
+  // sea level by quantile → roughly 60% land on every seed
+  const quant = (arr, t) => { const s = Float32Array.from(arr).sort(); return s[Math.floor(t * (s.length - 1))]; };
+  const sea = quant(H, 0.4), top = quant(H, 0.985), dryCut = quant(DRY, 0.62), woodCut = quant(WOOD, 0.55);
+  // north pole: a gentle green field around the pad, flush with the land
+  for (let i = 0; i < n; i++) { d.fromBufferAttribute(p, i).normalize(); if (d.y > poleCos) H[i] = sea + (top - sea) * (0.3 + (0.95 - Math.min(0.95, d.y)) * 0.8); }
+  const siteDirs = sites.map((st) => st.dir.clone().normalize());
+  const nearSite = (v, ang = 0.2) => siteDirs.some((sd) => v.angleTo(sd) < ang);
+  for (let i = 0; i < n; i++) {
+    d.fromBufferAttribute(p, i).normalize();
+    if (nearSite(d, lot * 1.2)) H[i] = Math.max(H[i], sea + (top - sea) * 0.22);
+    if (nearSite(d, lot * 0.6)) H[i] = sea + (top - sea) * 0.25;           // flat lot to build on
+  }
+
+  // biome of a point: { k: radius multiplier, c: colour, kind }
+  const biome = (dy, h, dr, wd) => {
+    if (h < sea) return { k: 0.95, c: BIOME.sand, kind: 'sea' };
+    const land = Math.min(1, (h - sea) / (top - sea));
+    if (dy > padCos) return { k: 1.025 + 0.3 * 0.08, c: BIOME.pad, kind: 'pad' };
+    if (dy > poleCos) return { k: 1.025 + land * 0.08, c: BIOME.grass, kind: 'grass' };
+    if (dy < -0.82) return { k: 1.02 + land * 0.1, c: BIOME.snow, kind: 'snow' };
+    if (land < 0.07) return { k: 1.015, c: BIOME.beach, kind: 'beach' };
+    if (land > 0.62) return { k: 1.05 + land * 0.14, c: BIOME.rock, kind: 'rock' };
+    if (dr > dryCut) { const step = Math.floor(land * 8) / 8; return { k: 1.02 + step * 0.14, c: step > 0.2 ? BIOME.mesa : BIOME.sand, kind: 'desert' }; }
+    return { k: 1.025 + land * 0.08, c: wd > woodCut ? BIOME.forest : BIOME.grass, kind: wd > woodCut ? 'forest' : 'grass' };
+  };
+  for (let i = 0; i < n; i++) {
+    d.fromBufferAttribute(p, i).normalize();
+    const k = 1 + (biome(d.y, H[i], DRY[i], WOOD[i]).k - 1) * relief;
+    p.setXYZ(i, d.x * R * k, d.y * R * k, d.z * R * k);
+  }
+  geo.computeVertexNormals();
+
+  // colour per face (not per vertex) so regions read as crisp painted patches
+  const idx = geo.index.array, faces = idx.length / 3, flat = geo.toNonIndexed();
+  const col = new Float32Array(faces * 9), spots = { trees: [], rocks: [], crystals: [] }, chance = rng(seed + 99), cen = new THREE.Vector3();
+  for (let f = 0; f < faces; f++) {
+    const a = idx[f * 3], b = idx[f * 3 + 1], c = idx[f * 3 + 2];
+    cen.fromBufferAttribute(p, a).add(d.fromBufferAttribute(p, b)).add(d.fromBufferAttribute(p, c)).divideScalar(3);
+    const dir = cen.clone().normalize();
+    const bm = biome(dir.y, (H[a] + H[b] + H[c]) / 3, (DRY[a] + DRY[b] + DRY[c]) / 3, (WOOD[a] + WOOD[b] + WOOD[c]) / 3);
+    for (let v = 0; v < 3; v++) col.set([bm.c.r, bm.c.g, bm.c.b], f * 9 + v * 3);
+    const roll = dir.y > capCos ? chance() : 1;
+    if (bm.kind === 'forest' && roll < 0.05 * treeRate) spots.trees.push(cen.clone());
+    else if (bm.kind === 'grass' && roll < 0.008 * treeRate) spots.trees.push(cen.clone());
+    else if (bm.kind === 'desert' && roll < 0.012) spots.rocks.push(cen.clone());
+    else if (bm.kind === 'rock' && roll < 0.03) spots.crystals.push(cen.clone());
+  }
+  flat.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const land = mesh(flat, toon('violet', { vertexColors: true, t1: 0.0, t2: 0.62, rim: 0.08 }), { inkGroup: 'planet' });
+  const ocean = mesh(new THREE.SphereGeometry(R * 1.0, 64, 48), toon({ shade: '#5a44c8', base: '#7d68ee', light: '#ad9cff' }, { t1: -0.1, t2: 0.6, rim: 0.12 }));
+  spin.add(land, ocean);
+
+  // props, standing on the surface along its normal
+  const up = new THREE.Vector3(0, 1, 0), q = new THREE.Quaternion();
+  const plant = (o, at, s) => { q.setFromUnitVectors(up, at.clone().normalize()); o.quaternion.copy(q); o.position.copy(at); o.scale.multiplyScalar(s); spin.add(o); };
+  const r = rng(seed);
+  const clear = (list) => list.filter((v) => !nearSite(v.clone().normalize(), lot) && v.clone().normalize().y < Math.cos(Math.acos(padCos) * 4));
+  spots.trees = clear(spots.trees); spots.rocks = clear(spots.rocks); spots.crystals = clear(spots.crystals);
+  // landmarks: drop each one straight down onto the surface
+  const ray = new THREE.Raycaster();
+  land.updateMatrixWorld(true);
+  sites.forEach((st) => {
+    const dir = st.dir.clone().normalize();
+    ray.set(dir.clone().multiplyScalar(R * 2), dir.clone().negate());
+    const hit = ray.intersectObject(land)[0];
+    plant(st.obj, hit ? hit.point : dir.multiplyScalar(R * 1.03), st.scale ?? 0.75);
+  });
+  spots.trees.slice(0, trees).forEach((at, i) => plant(makeTree({ seed: i + 1 }), at, 0.16 + r() * 0.08));
+  spots.rocks.slice(0, 14).forEach((at, i) => plant(makeRock({ tone: 'mesa', seed: i + 30, squash: [1.3, 0.6, 1] }), at, 0.18 + r() * 0.12));
+  spots.crystals.slice(0, 12).forEach((at, i) => plant(makeShard({ tone: i % 3 ? 'crystal' : 'lime', len: 1.2, w: 0.22 }), at, 0.45 + r() * 0.3));
+
+  // launch pad on the north pole
+  const padY = R * (1 + (0.025 + 0.3 * 0.08) * relief);
+  const pad = mesh(new THREE.CylinderGeometry(0.95, 1.05, 0.16, 40), toon('metal'));
+  pad.position.y = padY + 0.08; spin.add(pad);
+  const ring = mesh(new THREE.TorusGeometry(0.78, 0.05, 8, 48), toon('lime', { rim: 0.2 }));
+  ring.rotation.x = Math.PI / 2; ring.position.y = padY + 0.17; spin.add(ring);
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2 + 0.4, light = mesh(new THREE.IcosahedronGeometry(0.07, 2), toon('lime'));
+    light.position.set(Math.cos(a) * 1.0, padY + 0.18, Math.sin(a) * 1.0); spin.add(light);
+  }
+
+  // weather + a moon: clouds drift on tilted orbits, the lime gem circles the planet
+  const sky = new THREE.Group(); root.add(sky);
+  for (let i = 0; i < (sky_ ? 6 : 0); i++) {
+    const orbit = new THREE.Group(); orbit.rotation.set((r() - 0.5) * 1.2, r() * 6, (r() - 0.5) * 0.8);
+    const cl = makeCloud({ tone: 'cloudWhite', seed: i + 5, puffs: 4 + (i % 3), flatBottom: -0.05 });
+    cl.scale.setScalar(0.32 + r() * 0.18); cl.position.set(R * 1.32, 0, 0); cl.rotation.y = Math.PI / 2;
+    orbit.add(cl); sky.add(orbit); orbit.userData.speed = 0.05 + r() * 0.06;
+  }
+  const moonOrbit = new THREE.Group(); moonOrbit.rotation.set(0.35, 0, -0.25); if (sky_) root.add(moonOrbit);
+  const moon = makeGem({ size: 0.55 }); moon.position.set(R * 1.75, 0, 0); moonOrbit.add(moon);
+  const path = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 128 }, (_, i) => new THREE.Vector3(Math.cos(i / 128 * Math.PI * 2) * R * 1.75, 0, Math.sin(i / 128 * Math.PI * 2) * R * 1.75))),
+    new THREE.LineDashedMaterial({ color: '#f6e8ff', dashSize: 0.25, gapSize: 0.22, transparent: true, opacity: 0.45 }));
+  path.computeLineDistances(); path.userData.noInk = true; moonOrbit.add(path);
+
+  root.userData.tick = (dt) => {
+    sky.children.forEach((o) => o.rotateY(dt * o.userData.speed));
+    moonOrbit.rotateY(dt * 0.25); moon.rotation.x += dt * 0.6; moon.rotation.y += dt * 0.4;
+  };
+  return { root, spin, padTop: new THREE.Vector3(0, padY + 0.16, 0) };
+}

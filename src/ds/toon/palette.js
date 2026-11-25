@@ -24,6 +24,10 @@ export const tones = {
   trunk:   { shade: '#5a2a1e', base: '#7a3a26', light: '#9a5236' },
   planet:  { shade: '#4a1f6e', base: '#7a3aa8', light: '#b06fe0' },
   stone:   { shade: '#7a4a6a', base: '#a06b8b', light: '#c897b0' },
+  metal:   { shade: '#6b6488', base: '#9c95bb', light: '#cdc8e6' },
+  white:   { shade: '#cfc6e6', base: '#f3efff', light: '#ffffff' },
+  red:     { shade: '#a8203a', base: '#e0394f', light: '#ff7a86' },
+  roof:    { shade: '#5b2785', base: '#7a3aa8', light: '#a368d4' },
 
 };
 

@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { worlds as PALETTE } from './palette.js';
-import { setLight } from './materials.js';
+import { setLight, toon } from './materials.js';
+import { makeProjectPlanet, PLANETS } from './planets.js';
 import {
   rng, fbm, noise2, makeSky, makeStars, makeConstellation, makeCloud, makeRock,
   makeShard, makeGem, makePod, makeTree, makeTerrain, makeWater, makePlanet,
+  makeRingedPlanet, makeMonolith,
 } from './props.js';
 
 /* ==========================================================================
@@ -155,6 +157,114 @@ export function earth({ pod = false, desert = false } = {}) {
   return rig(w, { pos: [0, 5, 22], look: [0, 6, -20], sway: [2, 0.8] });
 }
 
+/* ---------- GALAXY (Work): every project is its own planet ------------
+   Planets sit on a sweeping arc, lit from the side by a low sun so each one is a
+   cel-shaded crescent; painted nebula clouds fill the sky. w.planets[i] = { obj, pos, slug }.
+   Also the Work window in the cockpit, so entering it lands you exactly here.  */
+const PLANET_ORDER = ['bridgr', 'penumbra', 'veil', 'skindetect', 'rsashield', 'lowkei', 'undercurrent', 'prakriva', 'userpersonas', 'bakesbymom', 'solae'];
+export const ORBIT = { cx: 19, cz: -20, rx: 23, rz: 15 };               // an orrery: every world on one tilted ellipse
+export const PLANET_AT = (i, n) => {
+  const a = (i / n) * Math.PI * 2 - 0.35;                                  // 01 sits front-left, the tour runs round to the right
+  return new THREE.Vector3(ORBIT.cx + Math.sin(a) * ORBIT.rx, Math.sin(a * 2) * 1.6, ORBIT.cz + Math.cos(a) * ORBIT.rz);
+};
+function nebulaTexture(stops) {
+  const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+  const grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  stops.forEach(([o, col]) => grd.addColorStop(o, col));
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.NoColorSpace; return t;
+}
+export function galaxy({ slugs = PLANET_ORDER } = {}) {
+  const w = base('galaxy'), { scene } = w, r = rng(31);
+  // nebula: big soft billboards far behind the planets, in the site's violets with a lime and coral breath
+  const clouds = [
+    [-120, 40, -230, 210, ['rgba(140,70,220,0.55)', 'rgba(90,40,170,0.25)', 'rgba(40,20,90,0)']],
+    [60, 70, -260, 260, ['rgba(220,90,170,0.42)', 'rgba(150,50,160,0.2)', 'rgba(60,20,90,0)']],
+    [160, -10, -220, 190, ['rgba(80,140,255,0.35)', 'rgba(60,70,200,0.16)', 'rgba(30,20,90,0)']],
+    [-20, -60, -200, 170, ['rgba(123,245,131,0.16)', 'rgba(60,140,120,0.08)', 'rgba(20,40,60,0)']],
+    [-200, -20, -170, 160, ['rgba(255,138,106,0.22)', 'rgba(170,70,120,0.1)', 'rgba(40,20,70,0)']],
+  ];
+  for (const [x, y, z, size, cols] of clouds) {
+    const tex = nebulaTexture([[0, cols[0]], [0.45, cols[1]], [1, cols[2]]]);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }));
+    sp.scale.set(size, size, 1); sp.position.set(x, y, z); sp.userData.noInk = true; scene.add(sp);
+  }
+  // the sun: a hot disc low on the left, with a wide glow
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: nebulaTexture([[0, 'rgba(255,236,200,1)'], [0.12, 'rgba(255,200,150,0.85)'], [0.35, 'rgba(255,140,120,0.25)'], [1, 'rgba(120,40,120,0)']]), transparent: true, depthWrite: false, fog: false }));
+  glow.scale.set(120, 120, 1); glow.position.set(-170, 70, -150); glow.userData.noInk = true; scene.add(glow);
+  // a few distant dust specks drifting
+  for (let i = 0; i < 26; i++) {
+    const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.12 + r() * 0.25, 0), toon('rock', { flat: 1 }));
+    m.userData.flat = 1; m.position.set((r() - 0.5) * 120, (r() - 0.5) * 50, -20 - r() * 70); scene.add(m);
+    w.tick.push(tumble(m, 0.2 + r() * 0.3));
+  }
+  // the orbit itself: a faint dashed ellipse through every world
+  {
+    const pts = []; for (let i = 0; i <= 240; i++) { const a = (i / 240) * Math.PI * 2; pts.push(new THREE.Vector3(ORBIT.cx + Math.sin(a) * ORBIT.rx, Math.sin(a * 2) * 1.6, ORBIT.cz + Math.cos(a) * ORBIT.rz)); }
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({ color: '#d6b8ff', dashSize: 0.9, gapSize: 1.1, transparent: true, opacity: 0.35, fog: false }));
+    line.computeLineDistances(); line.userData.noInk = true; scene.add(line);
+  }
+  w.planets = slugs.map((slug, i) => {
+    const obj = makeProjectPlanet(PLANETS[slug] || PLANETS.bridgr), pos = PLANET_AT(i, slugs.length);
+    obj.position.copy(pos); scene.add(obj);
+    const phase = r() * 6;
+    const pl = { obj, pos, slug, scale: 1, scaleGoal: 1 };
+    w.tick.push((dt, t) => {
+      obj.userData.tick(dt); obj.position.y = pos.y + Math.sin(t * 0.35 + phase) * 0.25;
+      pl.scale += (pl.scaleGoal - pl.scale) * (1 - Math.exp(-dt * 2.5)); obj.scale.setScalar(pl.scale);
+    });
+    return pl;
+  });
+  return rig(w, { pos: [-2, 29, 40], look: [9, -4, -18], sway: [2.2, 1.0], fov: 46 });
+}
+
+/* ---------- MOON (Work): a lunar plain, a gallery of monoliths ----------
+   The monoliths stand along a gentle curve; w.slabs[i] = { group, screen, seam, pos }.
+   The same world is the Work window in the cockpit and the Work page itself, so
+   flying through the window lands you exactly where it looked.               */
+export const SLAB_AT = (i) => new THREE.Vector3(i * 8.5, 0, -10 - i * 1.4 - Math.sin(i * 0.8) * 2.2);
+export function moon({ slabs = 11 } = {}) {
+  const w = base('moon'), { scene } = w, r = rng(9);
+  const spots = Array.from({ length: slabs }, (_, i) => SLAB_AT(i));
+  const craters = [[-14, -26, 9, 2.2], [22, -40, 12, 2.8], [52, -22, 7, 1.6], [-30, -60, 16, 3.4], [80, -52, 14, 3], [10, -8, 4, 0.9], [38, 2, 5, 1.1], [64, -6, 4.5, 1], [-6, 6, 3.5, 0.7], [100, -30, 9, 2]];
+  const nearPath = (x, z) => spots.reduce((m, p) => Math.min(m, Math.hypot(x - p.x, z - p.z)), 1e9);
+  const height = (x, z) => {
+    let y = (fbm(x * 0.018 + 4, z * 0.018, 4) - 0.5) * 5 + Math.max(0, -z - 70) * 0.08;   // rolling, rising far away
+    for (const [cx, cz, rr, dp] of craters) {
+      const d = Math.hypot(x - cx, z - cz);
+      if (d < rr) y -= dp * (1 - (d / rr) ** 2);
+      y += dp * 0.4 * Math.exp(-(((d - rr) / (rr * 0.22)) ** 2));                          // the raised rim
+    }
+    const k = THREE.MathUtils.smoothstep(nearPath(x, z), 3, 7);                               // flat ground under the slabs
+    return y * k;
+  };
+  w.height = height;
+  scene.add(makeTerrain({ size: 320, depth: 260, seg: 220, height, tone: 'moon', cx: 40, cz: -70 }));
+
+  // a coral ringed planet low over the horizon, and a thin second moon
+  const giant = makeRingedPlanet({ radius: 24 }); giant.position.set(78, 10, -150); scene.add(giant);
+  w.tick.push((dt) => { giant.children[0].rotation.y += dt * 0.01; });
+  const moonlet = makePlanet({ radius: 4, tone: 'moon', seed: 7 }); moonlet.position.set(-38, 46, -170); scene.add(moonlet);
+
+  // boulders, kept off the path
+  for (let i = 0, n = 0; i < 300 && n < 34; i++) {
+    const x = -40 + r() * 170, z = 8 - r() * 110;
+    if (nearPath(x, z) < 6) continue;
+    const b = makeRock({ seed: 70 + i, tone: r() > 0.5 ? 'moonDeep' : 'moon', squash: [1.3, 0.5 + r() * 0.3, 1.15] });
+    const s = 0.3 + Math.pow(r(), 2.2) * 2.2; b.scale.setScalar(s);
+    b.position.set(x, height(x, z) + s * 0.15, z); b.rotation.y = r() * 6; scene.add(b); n++;
+  }
+
+  // the monoliths
+  w.slabs = spots.map((p, i) => {
+    const m = makeMonolith(); m.pos = p.clone(); p.y = height(p.x, p.z);
+    m.group.position.copy(p); m.group.rotation.y = -0.18 - i * 0.012;        // turned a touch toward the path's start
+    scene.add(m.group); return m;
+  });
+  w.anchors.slabs = w.slabs.map((m) => m.group);
+  return rig(w, { pos: [-13, 3.9, 13], look: [4, 2.6, -16], sway: [1.2, 0.5], fov: 42 });
+}
+
 /* ---------- PROPS: the 3D kit on a turntable ---------------------------- */
 export function props() {
   const w = base('space'), { scene } = w;
@@ -172,5 +282,5 @@ export function props() {
   return rig(w, { pos: [0, 1.2, 13.5], look: [0, 0.2, 0], sway: [0.6, 0.4], fov: 42 });
 }
 
-export const WORLDS = { space, water, earth, props, dusk: (o) => water({ ...o, night: true }), desert: (o) => earth({ ...o, desert: true }) };
+export const WORLDS = { space, water, earth, props, moon, galaxy, dusk: (o) => water({ ...o, night: true }), desert: (o) => earth({ ...o, desert: true }) };
 

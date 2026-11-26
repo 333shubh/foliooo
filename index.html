@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="is-entering">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +7,11 @@
     <meta name="description" content="Shubh Jadiya, developer and designer turning interesting ideas into things you can actually use." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#2a0f44" />
+    <script>
+      // page transitions: coming back to Home the wipe runs downward (see components.css); old browsers fade instead
+      if ('onpagereveal' in window) addEventListener('pagereveal', (e) => { if (e.viewTransition) e.viewTransition.types.add('down'); });
+      else document.documentElement.classList.add('is-entering');
+    </script>
     <link rel="stylesheet" href="/src/ds/tokens.css" />
     <link rel="stylesheet" href="/src/ds/components.css" />
     <link rel="stylesheet" href="/src/ds/patterns.css" />

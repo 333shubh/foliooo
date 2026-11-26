@@ -88,7 +88,98 @@ function huts() {
   return g;
 }
 
-export const LANDMARKS = { bridgr: bridge, veil: lighthouse, rsashield: fort, undercurrent: mast, vinyasgen: city, userpersonas: huts };
+// Folio v1: an easel holding a collage (the old portfolio: a character over a media collage)
+function easel() {
+  const g = new THREE.Group();
+  const leg = (x, z, rx, rz) => { const l = at(cyl(0.022, 0.022, 1.1, 'metal', 5), x, 0.52, z); l.rotation.set(rx, 0, rz); return l; };
+  g.add(leg(-0.28, 0.08, 0.1, -0.16), leg(0.28, 0.08, 0.1, 0.16), leg(0, -0.26, -0.32, 0));
+  g.add(at(box(0.78, 0.05, 0.12, 'metal'), 0, 0.42, 0.14));
+  const panel = new THREE.Group(); panel.position.set(0, 0.78, 0.12); panel.rotation.x = -0.1; g.add(panel);
+  panel.add(at(box(0.74, 0.58, 0.04, 'white'), 0, 0, 0));
+  [['crystal', -0.18, 0.12, 0.3, 0.22], ['lilac', 0.17, 0.1, 0.3, 0.28], ['lime', -0.14, -0.14, 0.36, 0.18], ['red', 0.2, -0.15, 0.22, 0.16]]
+    .forEach(([tone, x, y, w, h]) => panel.add(at(box(w, h, 0.02, tone), x, y, 0.03)));
+  return g;
+}
+
+// Penumbra: a radar dish listening for what the signatures miss
+function radar() {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.16, 0.24, 0.24, 'metal', 10), 0, 0.12, 0));
+  g.add(at(cyl(0.035, 0.035, 0.42, 'metal', 6), 0, 0.42, 0));
+  const spin = new THREE.Group(); spin.position.y = 0.66; g.add(spin);     // turns slowly, listening
+  const head = new THREE.Group(); head.rotation.x = -0.7; spin.add(head);
+  const dish = mesh(new THREE.SphereGeometry(0.42, 20, 10, 0, Math.PI * 2, 0, 1.0), 'white', { side: THREE.DoubleSide });
+  dish.rotation.x = Math.PI; head.add(dish);
+  head.add(at(cyl(0.012, 0.012, 0.42, 'metal', 4), 0, 0.02, 0), at(mesh(new THREE.IcosahedronGeometry(0.045, 1), 'lime', { rim: 0.2 }), 0, 0.24, 0));
+  g.userData.tick = (dt) => { spin.rotation.y += dt * 0.6; };
+  return g;
+}
+
+// SkinDetect: a magnifying glass on a stand, looking closely
+function magnifier() {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.3, 0.34, 0.08, 'metal', 16), 0, 0.04, 0));
+  const arm = at(cyl(0.025, 0.025, 0.7, 'metal', 6), 0.05, 0.42, 0); arm.rotation.z = -0.25; g.add(arm);
+  const lens = new THREE.Group(); lens.position.set(0.2, 0.86, 0.02); lens.rotation.set(-0.3, 0, -0.25); g.add(lens);
+  const rim = mesh(new THREE.TorusGeometry(0.26, 0.04, 8, 32), 'roof', {}); lens.add(rim);
+  const glass = mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.02, 28), 'crystal', { t1: 0.2 }); glass.rotation.x = Math.PI / 2; lens.add(glass);
+  return g;
+}
+
+// Lowkei: a hand mirror standing up (the Mirror you talk to)
+function mirror() {
+  const g = new THREE.Group();
+  g.add(at(box(0.5, 0.08, 0.3, 'lilac'), 0, 0.04, 0));
+  g.add(at(cyl(0.04, 0.05, 0.36, 'roof', 8), 0, 0.26, 0));
+  const frame = mesh(new THREE.TorusGeometry(0.3, 0.05, 8, 32), 'roof', {}); frame.scale.y = 1.25; g.add(at(frame, 0, 0.82, 0));
+  const glass = mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.02, 28), 'crystal', { t1: 0.25 }); glass.rotation.x = Math.PI / 2; glass.scale.z = 1.25; g.add(at(glass, 0, 0.82, 0));
+  return g;
+}
+
+// Prakriva: a potted tulsi plant (Ayurveda)
+function plant() {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.26, 0.2, 0.32, 'sand', 12), 0, 0.16, 0), at(cyl(0.28, 0.28, 0.06, 'mesa', 12), 0, 0.33, 0));
+  g.add(at(cyl(0.025, 0.03, 0.4, 'trunk', 6), 0, 0.52, 0));
+  [[0, 0.82, 0, 0.24], [-0.18, 0.66, 0.06, 0.17], [0.19, 0.7, -0.04, 0.18], [0.04, 0.68, 0.18, 0.15]]
+    .forEach(([x, y, z, r]) => g.add(at(mesh(new THREE.IcosahedronGeometry(r, 0), 'leaf', { flat: 1 }, { flat: 1 }), x, y, z)));
+  return g;
+}
+
+// Bakes by Mom: a two-tier cake with a cherry
+function cake() {
+  const g = new THREE.Group();
+  g.add(at(cyl(0.44, 0.44, 0.05, 'white', 24), 0, 0.025, 0));
+  g.add(at(cyl(0.36, 0.36, 0.3, 'cloudPink', 24), 0, 0.2, 0), at(cyl(0.37, 0.37, 0.05, 'white', 24), 0, 0.36, 0));
+  g.add(at(cyl(0.24, 0.24, 0.24, 'lilac', 24), 0, 0.5, 0), at(cyl(0.25, 0.25, 0.04, 'white', 24), 0, 0.63, 0));
+  g.add(at(mesh(new THREE.IcosahedronGeometry(0.07, 2), 'red', { rim: 0.2 }), 0, 0.72, 0));
+  return g;
+}
+
+// Solae: a beach umbrella (swimwear)
+function umbrella() {
+  const g = new THREE.Group();
+  const pole = at(cyl(0.02, 0.02, 1, 'white', 6), 0, 0.5, 0); pole.rotation.z = 0.12; g.add(pole);
+  const top = mesh(new THREE.ConeGeometry(0.62, 0.26, 8, 1, true), 'cloudPink', { side: THREE.DoubleSide });
+  g.add(at(top, -0.06, 1.0, 0)); top.rotation.z = 0.12;
+  g.add(at(box(0.5, 0.04, 0.28, 'crystal'), 0.32, 0.02, 0.2));
+  return g;
+}
+
+// MealyMoore: two states joined by a transition
+function states() {
+  const g = new THREE.Group();
+  for (const [x, tone] of [[-0.32, 'lilac'], [0.32, 'lime']]) {
+    const ring = mesh(new THREE.TorusGeometry(0.2, 0.045, 8, 24), tone, {}); g.add(at(ring, x, 0.5, 0));
+    g.add(at(cyl(0.025, 0.025, 0.3, 'metal', 5), x, 0.15, 0));
+  }
+  g.add(at(box(0.3, 0.04, 0.04, 'white'), 0, 0.5, 0));
+  const tip = mesh(new THREE.ConeGeometry(0.06, 0.12, 8), 'white', {}); tip.rotation.z = -Math.PI / 2; g.add(at(tip, 0.13, 0.5, 0));
+  return g;
+}
+
+export const LANDMARKS = { bridgr: bridge, veil: lighthouse, rsashield: fort, undercurrent: mast, vinyasgen: city, userpersonas: huts, folio: easel,
+  penumbra: radar, skindetect: magnifier, lowkei: mirror, prakriva: plant, bakesbymom: cake, solae: umbrella, mealymoore: states };
 
 export function makeLandmark(slug) {
   const make = LANDMARKS[slug];

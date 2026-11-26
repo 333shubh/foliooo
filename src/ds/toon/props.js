@@ -185,6 +185,40 @@ export function makePlanet({ radius = 30, tone = 'planet', seed = 4 } = {}) {
   return mesh(geo, toon(tone, { t1: 0.35, t2: 0.82, rim: 0.05 }));
 }
 
+/* ---------- Ringed planet: latitude bands as separate cel pieces --------
+   Each band is its own mesh, so the ink pass draws a crisp line between them. */
+export function makeRingedPlanet({ radius = 20, bands = ['peach', 'coral', 'peach', 'coral', 'peach', 'coral', 'peach'], ring = 'ring', tilt = 0.32 } = {}) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const cuts = [0, 0.22, 0.36, 0.47, 0.55, 0.66, 0.8, 1];       // uneven stripes read as weather
+  bands.forEach((tone, i) => {
+    const a = cuts[i] * Math.PI, b = cuts[i + 1] * Math.PI;
+    body.add(mesh(new THREE.SphereGeometry(radius, 64, 12, 0, Math.PI * 2, a, b - a), toon(tone, { t1: 0.1, t2: 0.7, rim: 0.08 }), { inkGroup: 'gas' + (i % 2) }));
+  });
+  const disc = mesh(new THREE.RingGeometry(radius * 1.35, radius * 2.15, 128, 1), toon(ring, { side: THREE.DoubleSide, t1: -1 }));
+  disc.rotation.x = -Math.PI / 2; g.add(disc);
+  const gap = mesh(new THREE.RingGeometry(radius * 1.72, radius * 1.78, 128, 1), new THREE.MeshBasicMaterial({ color: '#7a5bc4', side: THREE.DoubleSide }), { noInk: true });
+  gap.rotation.x = -Math.PI / 2; gap.position.y = 0.01; g.add(gap);
+  g.rotation.z = tilt;
+  return g;
+}
+
+/* ---------- Monolith: a dark slab with a screen in its face -------------
+   Returns { group, screen } — put a texture on screen.material.map.        */
+export function makeMonolith({ w = 2.6, h = 4.2, d = 0.32 } = {}) {
+  const g = new THREE.Group();
+  const slab = mesh(new THREE.BoxGeometry(w, h, d), toon('slab', { flat: 1, rim: 0.12 }), { flat: 1 });
+  slab.position.y = h / 2; g.add(slab);
+  const bezel = mesh(new THREE.BoxGeometry(w - 0.18, h - 0.5, 0.04), toon('rock', { flat: 1 }), { flat: 1 });
+  bezel.position.set(0, h / 2 + 0.1, d / 2 + 0.01); g.add(bezel);
+  const screen = mesh(new THREE.PlaneGeometry(w - 0.3, h - 0.62), new THREE.MeshBasicMaterial({ color: '#2a1a5c' }), { noInk: true });
+  screen.position.set(0, h / 2 + 0.1, d / 2 + 0.035); g.add(screen);
+  const seam = mesh(new THREE.BoxGeometry(w + 0.02, 0.05, d + 0.02), new THREE.MeshBasicMaterial({ color: '#7bf583' }), { noInk: true });
+  seam.position.y = 0.16; g.add(seam);                                        // the lime light seam near the foot
+  const plinth = mesh(new THREE.CylinderGeometry(w * 0.78, w * 0.9, 0.18, 7), toon('moonDeep', { flat: 1 }), { flat: 1 });
+  plinth.position.y = -0.02; g.add(plinth);
+  return { group: g, screen, seam };
+}
+
 /* ---------- Home planet: every terrain on one little globe -------------
    Lilac ocean, green hills with trees, red desert + mesas, violet mountains
    with crystals, a snowy south pole, and a flat launch pad on the north pole

@@ -28,6 +28,13 @@ export const tones = {
   white:   { shade: '#cfc6e6', base: '#f3efff', light: '#ffffff' },
   red:     { shade: '#a8203a', base: '#e0394f', light: '#ff7a86' },
   roof:    { shade: '#5b2785', base: '#7a3aa8', light: '#a368d4' },
+  // the Moon (Work): pale regolith, dark slabs, a coral gas giant
+  moon:     { shade: '#5d5287', base: '#9d90c8', light: '#d9cff3' },
+  moonDeep: { shade: '#463c6e', base: '#7466a6', light: '#a99cd6' },
+  slab:     { shade: '#120a24', base: '#1f1338', light: '#3a2a5e' },
+  coral:    { shade: '#c4566a', base: '#f08a7e', light: '#ffc2a8' },
+  peach:    { shade: '#d98a6a', base: '#ffbe94', light: '#ffe2c4' },
+  ring:     { shade: '#b98fd6', base: '#e9c4ff', light: '#fff0ff' },
 
 };
 
@@ -54,6 +61,34 @@ export const worlds = {
     fog: '#b8d0ff', fogNear: 35, fogFar: 140,
     light: [0.6, 0.9, 0.3],
     stars: 0, constellation: false,
+  },
+  golden: { // About: hills at golden hour
+    label: 'Golden hills',
+    sky: ['#6f6be0', '#f2a2c6', '#ffc58e'],
+    fog: '#f3b4a6', fogNear: 50, fogFar: 230,
+    light: [0.8, 0.38, 0.32],
+    stars: 0, constellation: false,
+  },
+  lagoon: { // Contact: the lagoon at dusk
+    label: 'Lagoon at dusk',
+    sky: ['#24206e', '#7a58d4', '#f39ec8'],
+    fog: '#8d6fd8', fogNear: 40, fogFar: 200,
+    light: [-0.6, 0.42, 0.5],
+    stars: 0.6, constellation: false,
+  },
+  galaxy: { // Work: a star system where every project is its own planet
+    label: 'A star system',
+    sky: ['#070418', '#1c0f45', '#4a2380'],
+    fog: '#1c0f45', fogNear: 80, fogFar: 260,
+    light: [-0.75, 0.35, 0.5],
+    stars: 1.6, constellation: false,
+  },
+  moon: { // Work: a quiet lunar plain under a ringed planet
+    label: 'The Moon',
+    sky: ['#0b0724', '#2a1a5c', '#8a62c9'],
+    fog: '#3b2a78', fogNear: 45, fogFar: 240,
+    light: [0.75, 0.45, 0.35],
+    stars: 1.2, constellation: false,
   },
   dusk: { // the "night lake" window: water world after dark, constellations out
     label: 'Night lake',

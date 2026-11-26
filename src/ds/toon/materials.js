@@ -10,6 +10,10 @@ const C = (hex) => new THREE.Color(hex);
 // One light for the whole world, shared by every toon surface.
 const LIGHT = { value: new THREE.Vector3(0.5, 0.8, 0.6).normalize() };
 export const setLight = (v) => LIGHT.value.set(...v).normalize();
+// A colour grade every toon surface is multiplied by (1,1,1 = as painted). The About page
+// turns it up for daylight and down for night; other pages never touch it.
+export const GRADE = { value: new THREE.Vector3(1, 1, 1) };
+export const setGrade = (r, g, b) => GRADE.value.set(r, g, b);
 
 /* ------------------------------------------------------------------------
    toon(): three hard bands (shade / base / light) + optional rim band.
@@ -30,6 +34,7 @@ export function toon(tone = 'violet', { flat = 0, rim = 0, t1 = -0.05, t2 = 0.55
     fragmentShader: TOON_FS,
   });
   m.uniforms.uLightDir = LIGHT; // shared reference, not a copy
+  m.uniforms.uGrade = GRADE;
   return m;
 }
 
@@ -60,7 +65,7 @@ const TOON_VS = /* glsl */ `
 const TOON_FS = /* glsl */ `
   #include <common>
   #include <fog_pars_fragment>
-  uniform vec3 uShade, uBase, uLight, uLightDir;
+  uniform vec3 uShade, uBase, uLight, uLightDir, uGrade;
   uniform float uT1, uT2, uFlat, uRim;
   varying vec3 vN; varying vec3 vW;
   #ifdef USE_COLOR
@@ -83,7 +88,7 @@ const TOON_FS = /* glsl */ `
       float ra = fwidth(r) + 0.002;
       c = mix(c, lite, smoothstep(1.0 - uRim - ra, 1.0 - uRim + ra, r) * 0.8);
     }
-    gl_FragColor = vec4(c, 1.0);
+    gl_FragColor = vec4(c * uGrade, 1.0);
     #include <fog_fragment>
   }`;
 

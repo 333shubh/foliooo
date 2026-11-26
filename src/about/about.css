@@ -1,0 +1,109 @@
+/* ==========================================================================
+   About · THE GLOW. A tall scroll over one fixed WebGL forest; each section is
+   its own set and its own way of showing what's in it.
+   ========================================================================== */
+html { background: #a8d8c4; }
+body.glow-page { background: #a8d8c4; color: var(--paper-50); overflow-x: clip; }
+.world { position: fixed; inset: 0; z-index: 0; background: #a8d8c4; }
+.world canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.veil { position: fixed; inset: 0; z-index: 40; pointer-events: none; background: radial-gradient(80% 70% at 50% 45%, #ffd0f0 0%, #8c6bff 40%, #100736 100%); transition: opacity 1.8s var(--ease-out); }
+.veil.is-gone { opacity: 0; }
+
+.glow { position: relative; z-index: 10; }
+.sec { position: relative; min-height: 100vh; }
+.sec__k { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #b8ffb0; text-shadow: 0 0 14px rgba(123, 245, 131, 0.6); }
+.sec__t { margin-top: 12px; font-size: clamp(44px, 5.4vw, 92px); line-height: 0.9; letter-spacing: -0.05em; font-weight: var(--w-medium); text-shadow: 0 0 40px rgba(113, 240, 255, 0.35), 0 2px 30px rgba(8, 3, 26, 0.7); }
+.sec__hint { margin-top: 14px; max-width: 40ch; font-size: 15px; color: var(--lilac-100); text-shadow: 0 1px 14px rgba(8, 3, 26, 0.9); }
+
+/* ---------- hero ---------- */
+.sec--hero { min-height: 260vh; padding: 0 max(var(--gutter), 6vw); }
+.hero__k, .hero__t, .hero__lede, .hero__hint { position: relative; }
+.sec--hero > * { max-width: 760px; }
+.sec--hero::before { content: ''; position: absolute; left: -10vw; top: 6vh; width: 70vw; height: 95vh; pointer-events: none; background: radial-gradient(closest-side, rgba(6, 22, 20, 0.62), rgba(6, 22, 20, 0.32) 55%, transparent); filter: blur(14px); }
+.hero__k { padding-top: 22vh; text-shadow: none; }
+.hero__k .pill { font-size: 13px; }
+.hero__t { margin-top: 18px; display: grid; line-height: 0.82; letter-spacing: -0.06em; font-weight: var(--w-medium); text-shadow: 0 0 60px rgba(255, 106, 192, 0.45), 0 4px 40px rgba(8, 3, 26, 0.6); }
+.hero__line { font-size: clamp(40px, 4.4vw, 72px); opacity: 0.9; animation: rise 1.2s 0.6s var(--ease-out) both; }
+.hero__name { font-size: clamp(96px, 13vw, 230px); background: linear-gradient(100deg, #ffffff 10%, #ffb0e8 40%, #a8f0ff 70%, #c9ffb0 95%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: rise 1.4s 0.8s var(--ease-out) both, shine 8s 2s linear infinite; background-size: 200% 100%; filter: drop-shadow(0 0 30px rgba(255, 106, 192, 0.35)); }
+@keyframes shine { to { background-position: -200% 0; } }
+.hero__lede { margin-top: 22px; max-width: 36ch; font-size: clamp(18px, 1.6vw, 24px); line-height: 1.35; color: var(--lilac-100); text-shadow: 0 2px 20px rgba(8, 3, 26, 0.85); animation: rise 1.2s 1.1s var(--ease-out) both; }
+.hero__hint { display: inline-flex; align-items: center; gap: 10px; margin-top: 34px; font-size: 13px; color: var(--lilac-100); animation: rise 1.2s 1.4s var(--ease-out) both; }
+.hero__hint i { width: 22px; height: 34px; border-radius: 12px; box-shadow: inset 0 0 0 1.5px rgba(246, 232, 255, 0.6); position: relative; }
+.hero__hint i::after { content: ''; position: absolute; left: 50%; top: 7px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: var(--lime-400); box-shadow: 0 0 8px var(--lime-400); animation: wheel 1.8s var(--ease-in-out) infinite; }
+@keyframes wheel { 60% { transform: translateY(10px); opacity: 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(26px); filter: blur(8px); } }
+
+/* ---------- about: the sentence lights as the pulse runs along the roots ---------- */
+.sec--about { min-height: 220vh; }
+.about__inner { position: sticky; top: 0; height: 100vh; display: grid; align-content: center; gap: 22px; padding: 90px max(var(--gutter), 7vw) 50px; }
+.about__inner::before { content: ''; position: absolute; left: -10%; top: 5%; width: 75%; height: 90%; z-index: -1; pointer-events: none; background: radial-gradient(closest-side, rgba(8, 3, 26, 0.75), rgba(8, 3, 26, 0.4) 60%, transparent); filter: blur(12px); }
+.about__line { max-width: 26ch; font-size: clamp(26px, min(2.9vw, 5.2vh), 52px); line-height: 1.12; letter-spacing: -0.04em; font-weight: var(--w-medium); }
+.about__line .w { color: rgba(246, 232, 255, 0.16); transition: color 0.5s var(--ease-out), text-shadow 0.5s; }
+.about__line .w.on { color: #fff; text-shadow: 0 0 22px rgba(113, 240, 255, 0.7), 0 0 2px rgba(255, 255, 255, 0.8); }
+.about__line .w.on:nth-child(5n + 2) { color: #c9ffb0; text-shadow: 0 0 22px rgba(123, 245, 131, 0.7); }
+.about__line .w.on:nth-child(7n + 3) { color: #ffb0e8; text-shadow: 0 0 22px rgba(255, 106, 192, 0.7); }
+.stones { display: flex; flex-wrap: wrap; gap: 10px; }
+.stone { padding: 10px 16px 11px; border-radius: 22px 18px 24px 16px; background: rgba(20, 10, 50, 0.6); box-shadow: inset 0 0 0 1px rgba(113, 240, 255, 0.3), 0 0 30px -8px rgba(113, 240, 255, 0.6); backdrop-filter: blur(6px); animation: bob 4s var(--ease-in-out) infinite; animation-delay: calc(var(--d) * -1.2s); }
+.stone dt { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(190, 245, 255, 0.7); }
+.stone dd { margin-top: 2px; font-size: 16px; font-weight: var(--w-medium); }
+.stone a:hover { color: var(--lime-400); }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+
+/* ---------- work: pods in the canopy ---------- */
+.sec--work { min-height: 300vh; }
+.work__head { position: sticky; top: 0; padding: 110px max(var(--gutter), 6vw) 0; pointer-events: none; }
+.pods { position: fixed; inset: 0; z-index: 12; pointer-events: none; overflow: hidden; }
+.pod { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 8px; margin: -46px 0 0 0; border-radius: var(--r-pill); background: rgba(16, 6, 46, 0.62); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c) 60%, transparent), 0 0 24px -6px var(--c); color: #fff; font-size: 13px; font-weight: var(--w-medium); white-space: nowrap; backdrop-filter: blur(6px); translate: -50% 0; opacity: 0; pointer-events: none; transition: opacity 0.4s, background var(--d-fast), box-shadow var(--d-fast); }
+.pod.is-on { opacity: 1; pointer-events: auto; }
+.pod i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); }
+.pod:hover, .pod:focus-visible { background: rgba(40, 18, 90, 0.85); box-shadow: inset 0 0 0 1.5px var(--c), 0 0 34px -2px var(--c); }
+.podcard { position: absolute; left: 0; top: 0; width: 310px; pointer-events: auto; text-align: left; box-shadow: var(--lift-2), 0 0 0 1px rgba(22, 9, 35, 0.12), 0 0 70px -10px var(--c); }
+.podcard[hidden] { display: none; }
+.podcard.bloom { animation: bloom 0.6s var(--ease-spring) both; }
+@keyframes bloom { from { opacity: 0; clip-path: circle(0% at 50% 50%); } to { clip-path: circle(80% at 50% 50%); } }
+.podcard .card__media { height: 170px; }
+.podcard .card__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.podcard__k { margin: 14px 12px 0; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--violet-500); }
+.podcard .card__title { margin: 6px 12px 0; }
+.podcard .card__body { margin: 8px 12px 0; font-size: 14px; color: var(--stone-500); }
+.podcard__tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 12px 0; }
+.podcard__tags span { padding: 3px 8px; border-radius: var(--r-pill); font-size: 11px; background: var(--paper-100); box-shadow: inset 0 0 0 1px rgba(22, 9, 35, 0.1); }
+.podcard__go { display: flex; align-items: center; gap: 16px; margin: 14px 12px 0; }
+.podcard__go .link { color: var(--violet-500); }
+
+/* ---------- experience: roles rush past on the river ---------- */
+.sec--exp { min-height: 420vh; }
+.runway { position: fixed; inset: 0; z-index: 11; pointer-events: none; opacity: 0; transition: opacity 0.6s; }
+.runway.is-on { opacity: 1; }
+.run__k { position: absolute; left: max(var(--gutter), 6vw); top: 110px; }
+.run { position: absolute; left: 50%; top: 50%; width: min(900px, 86vw); text-align: center; opacity: 0; will-change: transform, opacity, filter; }
+.run__when { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: #b8ffb0; text-shadow: 0 0 14px rgba(123, 245, 131, 0.7); }
+.run__role { margin-top: 10px; font-size: clamp(44px, 6.4vw, 110px); line-height: 0.9; letter-spacing: -0.05em; font-weight: var(--w-medium); text-shadow: 0 0 50px rgba(113, 240, 255, 0.5), 0 4px 40px rgba(8, 3, 26, 0.75); }
+.run__org { margin-top: 12px; font-size: clamp(20px, 2vw, 30px); color: #ffb0e8; text-shadow: 0 0 24px rgba(255, 106, 192, 0.6); }
+.run__d { margin: 12px auto 0; max-width: 46ch; font-size: 16px; line-height: 1.45; color: var(--lilac-100); text-shadow: 0 2px 18px rgba(8, 3, 26, 0.9); }
+
+/* ---------- sections still to come (shown plainly for now) ---------- */
+.sec--next { display: grid; align-items: center; padding: 0 max(var(--gutter), 6vw); min-height: 130vh; }
+.soon { max-width: 640px; padding: 26px 28px; border-radius: var(--r-xl); background: rgba(14, 6, 40, 0.55); box-shadow: inset 0 0 0 1px rgba(113, 240, 255, 0.2); backdrop-filter: blur(8px); }
+.soon .sec__t { font-size: clamp(36px, 3.6vw, 56px); }
+.soon__row { margin-top: 10px; font-size: 16px; color: var(--lilac-100); }
+.soon__row b { color: #fff; font-weight: var(--w-medium); }
+.soon .btn { margin-top: 18px; }
+
+/* ---------- the trail: where you are in the walk ---------- */
+.trail { position: fixed; z-index: 15; left: max(14px, 1.4vw); top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
+.trail button { display: flex; align-items: center; gap: 10px; height: 22px; color: var(--lilac-100); font-size: 12px; }
+.trail i { width: 7px; height: 7px; border-radius: 50%; background: rgba(246, 232, 255, 0.3); transition: background var(--d-base), box-shadow var(--d-base), transform var(--d-base) var(--ease-spring); }
+.trail span { opacity: 0; transform: translateX(-6px); transition: opacity var(--d-base), transform var(--d-base); white-space: nowrap; text-shadow: 0 1px 10px rgba(8, 3, 26, 0.9); }
+.trail button:hover span, .trail button.is-on span { opacity: 1; transform: none; }
+.trail button.is-on i { background: var(--lime-400); box-shadow: 0 0 10px var(--lime-400); transform: scale(1.4); }
+
+@media (max-width: 900px) {
+  .trail { display: none; }
+  .podcard { width: calc(100vw - 40px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .veil { transition: none; }
+  .hero__line, .hero__name, .hero__lede, .hero__hint { animation: none; }
+  .stone { animation: none; }
+}

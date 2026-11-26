@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About · Shubh Jadiya</title>
+    <meta name="description" content="About Shubh Jadiya: developer and designer working across security, data, AI and design." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#100736" />
+    <script>
+      if ('onpagereveal' in window) {
+        const viaWindow = sessionStorage.getItem('vt') === 'window';
+        sessionStorage.removeItem('vt');
+        if (viaWindow) document.documentElement.classList.add('vt-window');
+        addEventListener('pagereveal', (e) => {
+          if (!e.viewTransition) { document.documentElement.classList.remove('vt-window'); return; }
+          e.viewTransition.types.add(viaWindow ? 'window' : 'up');
+          e.viewTransition.finished.finally(() => document.documentElement.classList.remove('vt-window'));
+        });
+      } else document.documentElement.classList.add('is-entering');
+      history.scrollRestoration = 'manual';
+    </script>
+    <link rel="stylesheet" href="/src/ds/tokens.css" />
+    <link rel="stylesheet" href="/src/ds/components.css" />
+    <link rel="stylesheet" href="/src/ds/patterns.css" />
+    <link rel="stylesheet" href="/src/about/about.css" />
+  </head>
+  <body class="glow-page">
+    <header class="site-header">
+      <a class="brand" href="/#cockpit" aria-label="Shubh Jadiya, back to the cockpit">
+        <svg class="brand__mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(-24 12 12)" stroke-width="1.5"/></svg>
+        Shubh Jadiya
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a class="link" href="/about.html" aria-current="page">About</a>
+        <a class="link" href="/work.html">Work</a>
+        <a class="btn btn--paper" href="/contact.html"><span class="btn__label">Say hello</span></a>
+      </nav>
+    </header>
+
+    <div class="world" data-world-stage><canvas id="gl" aria-hidden="true"></canvas></div>
+    <div class="veil" id="veil" aria-hidden="true"></div>
+    <nav class="trail" id="trail" aria-label="Sections"></nav>
+    <div class="pods" id="pods"></div>
+    <div class="runway" id="runway" aria-hidden="true"></div>
+
+    <main class="glow" id="glow"></main>
+
+    <script type="module" src="/src/about/about.js"></script>
+  </body>
+</html>

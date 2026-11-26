@@ -1,5 +1,7 @@
 import { Stage } from './toon/stage.js';
 import { WORLDS } from './toon/worlds.js';
+import { PLACES } from './toon/places.js';
+import { WINDOWS } from './toon/windows.js';
 
 /* ==========================================================================
    The cockpit: windows on the inside of a curved wall (a CSS 3D drum).
@@ -26,7 +28,7 @@ export function mountCockpit(cockpit, { dots, start = 0, auto = 0 } = {}) {
 
   const stages = originals.map((win) => {
     const s = new Stage(win.querySelector('canvas'), { dpr: 1.5 });
-    s.setWorld(WORLDS[win.dataset.world]({ pod: false }));   // you are inside the pod here
+    s.setWorld((WINDOWS[win.dataset.world] || WORLDS[win.dataset.world] || PLACES[win.dataset.world])({ pod: false }));   // you are inside the pod here
     return s;
   });
 

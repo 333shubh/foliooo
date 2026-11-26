@@ -4,7 +4,7 @@
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-gutter: stable; }   /* same viewport width on every page, so page transitions never abort */
 body {
   font-family: var(--font); font-size: var(--t-body); line-height: var(--lh-body);
   color: var(--fg); background: var(--bg);
@@ -47,6 +47,32 @@ img, canvas, svg { display: block; }
 body { transition: opacity 420ms var(--ease-out), filter 420ms var(--ease-out); }
 .is-entering body, .is-leaving body { opacity: 0; filter: blur(6px); }
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; } }
+/* between pages: the reference's wipe (cockpit → world: old page up and out, new rises from below; back: reversed).
+   1.9s easeInOutCubic, the header stays put. The direction comes from each page's <head> (view-transition types). */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 1.9s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); animation-fill-mode: both; }
+html:active-view-transition-type(up)::view-transition-old(root) { animation-name: vt-out-up; }
+html:active-view-transition-type(up)::view-transition-new(root) { animation-name: vt-in-up; }
+html:active-view-transition-type(down)::view-transition-old(root) { animation-name: vt-out-down; }
+html:active-view-transition-type(down)::view-transition-new(root) { animation-name: vt-in-down; }
+@keyframes vt-out-up { to { transform: translateY(-100%); opacity: 0; } }
+@keyframes vt-in-up { from { transform: translateY(100%); opacity: 0; } }
+@keyframes vt-out-down { to { transform: translateY(100%); opacity: 0; } }
+@keyframes vt-in-down { from { transform: translateY(-100%); opacity: 0; } }
+/* through a cockpit window: the window's glass grows to fill the screen and becomes the next page's world;
+   the cockpit fades away behind it, and the new page's text arrives once the world has opened up */
+.window.is-entering .window__copy { opacity: 0; transition: opacity 0.2s; }
+.vt-window [data-world-stage] { view-transition-name: world; }
+html:active-view-transition-type(window)::view-transition-group(world) { animation-duration: 1.4s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+html:active-view-transition-type(window)::view-transition-image-pair(world) { isolation: auto; }
+html:active-view-transition-type(window)::view-transition-old(world) { animation: none; mix-blend-mode: normal; }
+html:active-view-transition-type(window)::view-transition-new(world) { animation: vt-fade-in 0.6s 0.85s both; mix-blend-mode: normal; }
+html:active-view-transition-type(window)::view-transition-old(root) { animation: vt-fade-out 0.7s 0.15s both; }
+html:active-view-transition-type(window)::view-transition-new(root) { animation: vt-fade-in 0.7s 1.05s both; }
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
 
 /* ---------- Header ------------------------------------------------------ */
 .site-header {

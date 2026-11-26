@@ -167,8 +167,8 @@ export class Stage {
     world.attach?.(this);
     let i = 0; const groups = new Map();
     this.scene.traverse((o) => {
-      if (!o.isMesh && !o.isPoints && !o.isLine) return;
-      if (o.userData.noInk || o.isPoints || o.isLine) { o.layers.set(LAYER_FLAT); return; }
+      if (!o.isMesh && !o.isPoints && !o.isLine && !o.isSprite) return;
+      if (o.userData.noInk || o.isPoints || o.isLine || o.isSprite) { o.layers.set(LAYER_FLAT); return; }
       const g = o.userData.inkGroup;
       let id = g && groups.get(g);
       if (!id) { id = (((i++ * 97) % 254) + 1) / 255; if (g) groups.set(g, id); }

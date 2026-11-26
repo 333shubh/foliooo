@@ -223,6 +223,16 @@ $('#track').innerHTML = pages.map((pg, i) => `
     <div class="window__copy"><div><h3>${pg.title}</h3><p>${pg.line}</p></div>
       <a class="btn btn--sm${i % 2 ? ' btn--light' : ''}" href="${pg.href}"><span class="btn__label">Enter</span></a>
     </div></div></article>`).join('');
+// entering a window: that window's glass grows into the page behind it (cross-page view transition, 'world')
+$('#track').addEventListener('click', (e) => {
+  const link = e.target.closest('.window a[href]');
+  if (!link || !('onpagereveal' in window)) return;
+  const win = link.closest('.window');
+  win.classList.add('is-entering');
+  win.querySelector('.window__glass').style.viewTransitionName = 'world';
+  sessionStorage.setItem('vt', 'window');
+});
+addEventListener('pageshow', () => document.querySelectorAll('.window__glass').forEach((g) => { g.style.viewTransitionName = ''; g.closest('.window').classList.remove('is-entering'); }));
 const cockpit = mountCockpit(cockpitEl, { dots: $('#dots'), start: 1, auto: reduced ? 0 : 4500 }), cockpitStages = cockpit.stages;
 const footer = $('.space-footer');
 // in the cockpit the page scrolls again, smoothed (the story itself never scrolls)
@@ -268,6 +278,8 @@ function skip() {                                   // cut to the last story bea
   cut.classList.add('on');
   setTimeout(() => { tw.from = tw.to = 5; tw.t0 = 0; tw.dur = 0; b = 5; startMove(5, COCKPIT); cut.classList.remove('on'); }, reduced ? 0 : 380);
 }
+// back from an inner page (/#cockpit): start in the cockpit, not at the top of the story
+if (location.hash === '#cockpit') { tw.from = tw.to = COCKPIT; tw.t0 = 0; tw.dur = 0; history.replaceState(null, '', location.pathname); }
 if (import.meta.env.DEV) window.__seek = (v) => { autoplay = false; tw.from = tw.to = v; tw.t0 = 0; tw.dur = 0; };   // dev: freeze the mission at any point
 $('#launch-btn').addEventListener('click', () => step(1));
 $('#skip').addEventListener('click', skip);

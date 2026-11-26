@@ -22,6 +22,9 @@ export function reveal(root = document) {
 }
 
 export function pageTransitions() {
+  // Where the browser has cross-page view transitions, it runs the reference's vertical wipe itself
+  // (@view-transition in components.css; each page's <head> names the direction). Otherwise: the fade below.
+  if ('onpagereveal' in window) { document.documentElement.classList.remove('is-entering'); return; }
   document.documentElement.classList.add('is-entering');
   requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.remove('is-entering')));
   document.addEventListener('click', (e) => {
